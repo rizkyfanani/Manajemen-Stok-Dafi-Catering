@@ -493,16 +493,25 @@
       lucide.createIcons();
     }
 
-    function populateSelectPetugas() {
-      const select = document.getElementById('petugasSelectBarang');
-      if (!select) return;
+    // Populate Select di Petugas (Dengan Pengingat Pilihan Agar Tidak Ter-reset Sync)
+function populateSelectPetugas() {
+  const select = document.getElementById('petugasSelectBarang');
+  if (!select) return;
 
-      select.innerHTML = '';
-      masterBarang.forEach(item => {
-        select.innerHTML += `<option value="${item.id}">${item.nama} (Sisa: ${item.jumlah} ${item.satuan})</option>`;
-      });
-    }
+  // 1. Simpan ID barang yang SEDANG DIPILIH petugas saat ini
+  const currentSelectedValue = select.value;
 
+  // 2. Kosongkan & isi ulang pilihan barang
+  select.innerHTML = '';
+  masterBarang.forEach(item => {
+    select.innerHTML += `<option value="${item.id}">${item.nama} (Sisa: ${item.jumlah} ${item.satuan})</option>`;
+  });
+
+  // 3. Kembalikan pilihan ke barang yang sedang dipilih tadi (jika masih ada di daftar)
+  if (currentSelectedValue && masterBarang.some(b => String(b.id) === String(currentSelectedValue))) {
+    select.value = currentSelectedValue;
+  }
+}
     // SIMPAN / UPDATE MASTER ADMIN
     function handleSaveStock(e) {
       e.preventDefault();

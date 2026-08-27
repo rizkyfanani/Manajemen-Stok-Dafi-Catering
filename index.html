@@ -1,12 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="id" class="h-full bg-slate-950">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Menampilkan Logo Dafi Catering -->
-  <img src="logo.png" alt="Logo Dafi Catering" style="max-height: 80px; width: auto; margin-bottom: 10px;">
-  <title>Catering Control System</title>
-  <!-- Favicon Dafi Catering -->
+  <title>Dafi Catering - Control System</title>
+
+  <!-- Favicon Logo -->
   <link rel="icon" type="image/png" href="logo.png">
   
   <!-- Tailwind CSS CDN -->
@@ -33,11 +33,12 @@
     <div class="w-full max-w-md space-y-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
       
       <div class="text-center">
-        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20 shadow-lg shadow-amber-500/10">
-          <i data-lucide="utensils" class="h-7 w-7"></i>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20 shadow-lg shadow-amber-500/10 overflow-hidden">
+          <img src="logo.png" alt="Logo Dafi Catering" class="h-full w-full object-cover hidden" id="loginLogoImg" onload="this.classList.remove('hidden'); document.getElementById('loginIconFallback').classList.add('hidden')">
+          <i data-lucide="utensils" id="loginIconFallback" class="h-7 w-7"></i>
         </div>
-        <h2 class="mt-4 text-2xl font-extrabold tracking-tight text-white">Catering Control</h2>
-        <p class="mt-1 text-xs text-slate-400">Sistem Pemakaian & Manajemen Stok Bahan</p>
+        <h2 class="mt-4 text-2xl font-extrabold tracking-tight text-white">Dafi Catering</h2>
+        <p class="mt-1 text-xs text-slate-400">Sistem Manajemen & Pemakaian Stok Bahan</p>
       </div>
 
       <form class="space-y-4" onsubmit="handleLogin(event)">
@@ -73,12 +74,13 @@
       <div class="space-y-6">
         <div class="flex items-center justify-between px-2">
           <div class="flex items-center gap-3">
-            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-extrabold shadow-md shadow-amber-500/20">
-              <i data-lucide="chef-hat" class="h-5 w-5"></i>
+            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-extrabold shadow-md shadow-amber-500/20 overflow-hidden">
+              <img src="logo.png" alt="Logo" class="h-full w-full object-cover hidden" onload="this.classList.remove('hidden'); document.getElementById('sidebarIconFallback').classList.add('hidden')">
+              <i data-lucide="chef-hat" id="sidebarIconFallback" class="h-5 w-5"></i>
             </div>
             <div>
-              <h1 class="font-bold text-sm text-white leading-none">CateringHub</h1>
-              <span class="text-[10px] text-amber-400 font-medium">Management System</span>
+              <h1 class="font-bold text-sm text-white leading-none">Dafi Catering</h1>
+              <span class="text-[10px] text-amber-400 font-medium">Control System</span>
             </div>
           </div>
           <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white">
@@ -95,14 +97,14 @@
             <i data-lucide="plus-circle" class="h-4 w-4"></i> Tambah / Kelola Stok
           </button>
           <button onclick="switchAdminTab('laporan')" id="menuLaporan" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-            <i data-lucide="file-text" class="h-4 w-4"></i> Log Transaksi
+            <i data-lucide="file-text" class="h-4 w-4"></i> Log Pemakaian
           </button>
         </nav>
       </div>
 
       <div class="border-t border-slate-800 pt-4 px-2 flex items-center justify-between">
         <div class="text-xs">
-          <p class="font-bold text-white">Admin Catering</p>
+          <p class="font-bold text-white">Admin Dafi Catering</p>
           <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-semibold">
             <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             Realtime Sync
@@ -127,7 +129,7 @@
           </button>
           <div>
             <h2 class="text-sm sm:text-lg font-bold text-white leading-tight">Pengelolaan Stok</h2>
-            <p class="text-[10px] sm:text-xs text-slate-400 hidden sm:block">Kelola bahan dan peralatan catering.</p>
+            <p class="text-[10px] sm:text-xs text-slate-400 hidden sm:block">Kelola bahan & barang Dafi Catering.</p>
           </div>
         </div>
 
@@ -136,7 +138,7 @@
           <i data-lucide="clock" class="h-4 w-4 text-amber-400"></i>
           <div class="text-right">
             <div id="clock24" class="text-xs sm:text-base font-extrabold tracking-wider text-white font-mono leading-none">00:00:00</div>
-            <div id="dateToday" class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">Kamis, 13 Agt 2026</div>
+            <div id="dateToday" class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">Rabu, 19 Agt 2026</div>
           </div>
         </div>
       </header>
@@ -178,6 +180,9 @@
       <!-- TAB 2: FORM STOK ADMIN -->
       <main id="tabInputAdmin" class="hidden p-4 sm:p-8 max-w-xl space-y-4">
         <h3 id="formTitle" class="text-sm sm:text-base font-bold text-white">Tambah / Update Stok Barang</h3>
+        <p class="text-xs text-amber-400 bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+          💡 <b>Info:</b> Jika barang sudah ada, jumlah yang diinput di sini akan <b>otomatis dijumlahkan/ditambahkan</b> ke sisa stok yang ada.
+        </p>
         
         <form onsubmit="handleSaveStock(event)" class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6 space-y-4">
           <input type="hidden" id="editId" value="">
@@ -189,7 +194,7 @@
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Stok <span class="text-amber-500">*</span></label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Stok Baru / Tambahan <span class="text-amber-500">*</span></label>
               <input type="number" id="inputJumlah" step="any" min="0" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
             </div>
 
@@ -213,19 +218,27 @@
         </form>
       </main>
 
-      <!-- TAB 3: LOG TRANSAKSI -->
+      <!-- TAB 3: LOG PEMAKAIAN -->
       <main id="tabLaporan" class="hidden p-4 sm:p-8 space-y-4">
-        <h3 class="text-sm sm:text-base font-bold text-white">Log Pemakaian & Transaksi</h3>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 class="text-sm sm:text-base font-bold text-white">Log Riwayat Pemakaian Bahan</h3>
+          <button onclick="resetSemuaLog()" class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/30 px-3.5 py-2 text-xs font-semibold transition">
+            <i data-lucide="trash" class="h-4 w-4"></i> Reset Semua Log
+          </button>
+        </div>
+
         <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300 min-w-[600px]">
+          <table class="w-full text-left text-xs text-slate-300 min-w-[700px]">
             <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
               <tr>
                 <th class="px-4 py-3">Tanggal</th>
                 <th class="px-4 py-3">Jam</th>
-                <th class="px-4 py-3">Nama Barang</th>
+                <th class="px-4 py-3">Nama Barang / Bahan</th>
                 <th class="px-4 py-3 text-center">Jumlah Dipakai</th>
                 <th class="px-4 py-3">Satuan</th>
                 <th class="px-4 py-3">Petugas</th>
+                <th class="px-4 py-3">Perusahaan / Ket</th>
+                <th class="px-4 py-3 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody id="tableLogBody" class="divide-y divide-slate-800/60">
@@ -246,8 +259,9 @@
     
     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
       <div class="flex items-center gap-2">
-        <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-bold">
-          <i data-lucide="chef-hat" class="h-4 w-4"></i>
+        <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-bold overflow-hidden">
+          <img src="logo.png" alt="Logo" class="h-full w-full object-cover hidden" onload="this.classList.remove('hidden'); document.getElementById('petugasIconFallback').classList.add('hidden')">
+          <i data-lucide="chef-hat" id="petugasIconFallback" class="h-4 w-4"></i>
         </div>
         <div>
           <h1 class="font-bold text-sm text-white">Input Pemakaian Bahan</h1>
@@ -274,6 +288,12 @@
         <input type="number" id="petugasJumlah" step="any" min="0.1" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-center text-2xl font-bold text-amber-400 focus:border-amber-500 focus:outline-none">
       </div>
 
+      <!-- FITUR BARU 1: INPUT PERUSAHAAN / KETERANGAN -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Perusahaan / Klien Dilayani <span class="text-slate-500">(Opsional)</span></label>
+        <input type="text" id="petugasKeterangan" placeholder="Contoh: PT Sampoerna / Catering Wedding" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
+      </div>
+
       <button type="submit" class="w-full rounded-xl bg-amber-500 py-3.5 text-xs font-bold text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition active:scale-95">
         💾 SIMPAN PEMAKAIAN BAHAN
       </button>
@@ -287,17 +307,18 @@
   <!-- 4. JAVASCRIPT LOGIC & REAL-TIME SYNC                              -->
   <!-- ================================================================= -->
   <script>
-    // ⚠️ MASUKKAN URL WEB APP GOOGLE APPS SCRIPT
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzN6uTETH4sXQCHNati3urJGqfZy4geB-b6Zy0he5SYQqsWxR0RQj7XyLLccSNbtHNi/exec";
+    // ⚠️ PASTI SKRIP INI TERISI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxYOUR_SCRIPT_ID_HERE/exec";
 
     let masterBarang = [];
     let logPemakaian = [];
     let currentRole = 'admin';
     let syncInterval = null;
+    let isEditMode = false;
 
     lucide.createIcons();
 
-    // Digital Clock
+    // Clock
     function updateClock() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -343,7 +364,6 @@
         document.getElementById('petugasLayout').classList.remove('hidden');
       }
 
-      // Tarik Data Pertama kali & Mulai Auto Sync Realtime
       fetchDataFromGAS();
       startRealtimeSync();
     }
@@ -355,7 +375,7 @@
       document.getElementById('loginScreen').classList.remove('hidden');
     }
 
-    // REAL-TIME AUTO SYNC (Tarik data tiap 4 detik dari Google Sheets)
+    // REALTIME SYNC (Tiap 4 Detik)
     function startRealtimeSync() {
       if (!syncInterval) {
         syncInterval = setInterval(() => {
@@ -371,7 +391,6 @@
       }
     }
 
-    // TARIK DATA DARI GAS
     function fetchDataFromGAS() {
       if (!GAS_URL || GAS_URL.includes("YOUR_SCRIPT_ID")) return;
 
@@ -431,7 +450,7 @@
             <td class="px-6 py-3.5 text-slate-400">${item.keterangan || '-'}</td>
             <td class="px-6 py-3.5 text-center">
               <div class="flex items-center justify-center gap-1.5">
-                <button onclick="quickUpdateStock('${item.id}')" title="Update Stok" class="p-1.5 bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-slate-950 rounded-lg transition">
+                <button onclick="quickUpdateStock('${item.id}')" title="Set Sisa Stok Manual" class="p-1.5 bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-slate-950 rounded-lg transition">
                   <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i>
                 </button>
                 <button onclick="editBarang('${item.id}')" title="Edit Data" class="p-1.5 bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg transition">
@@ -461,7 +480,7 @@
             </div>
             <div class="pt-2 border-t border-slate-800/80 flex gap-2">
               <button onclick="quickUpdateStock('${item.id}')" class="flex-1 flex items-center justify-center gap-1 py-1.5 bg-amber-500/10 text-amber-400 rounded-xl text-xs font-semibold">
-                <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i> Update
+                <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i> Set Stok
               </button>
               <button onclick="editBarang('${item.id}')" class="flex-1 flex items-center justify-center gap-1 py-1.5 bg-blue-500/10 text-blue-400 rounded-xl text-xs font-semibold">
                 <i data-lucide="edit-3" class="h-3.5 w-3.5"></i> Edit
@@ -474,7 +493,7 @@
         `;
       });
 
-      // Log Table
+      // Log Table (DENGAN TOMBOL HAPUS LOG PER BARIS)
       const tbodyLog = document.getElementById('tableLogBody');
       tbodyLog.innerHTML = '';
       logPemakaian.forEach(log => {
@@ -486,6 +505,12 @@
             <td class="px-4 py-3 text-center font-bold text-amber-400">${log.jumlah}</td>
             <td class="px-4 py-3 text-slate-400">${log.satuan}</td>
             <td class="px-4 py-3 text-slate-400">${log.petugas}</td>
+            <td class="px-4 py-3 text-amber-300 font-medium">${log.keterangan || '-'}</td>
+            <td class="px-4 py-3 text-center">
+              <button onclick="hapusLogTransaksi('${log.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition" title="Hapus Log Ini">
+                <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
+              </button>
+            </td>
           </tr>
         `;
       });
@@ -493,26 +518,24 @@
       lucide.createIcons();
     }
 
-    // Populate Select di Petugas (Dengan Pengingat Pilihan Agar Tidak Ter-reset Sync)
-function populateSelectPetugas() {
-  const select = document.getElementById('petugasSelectBarang');
-  if (!select) return;
+    // POPULATE DROPDOWN PETUGAS (PILIHAN TERKUNCI SAFE)
+    function populateSelectPetugas() {
+      const select = document.getElementById('petugasSelectBarang');
+      if (!select) return;
 
-  // 1. Simpan ID barang yang SEDANG DIPILIH petugas saat ini
-  const currentSelectedValue = select.value;
+      const currentSelectedValue = select.value;
 
-  // 2. Kosongkan & isi ulang pilihan barang
-  select.innerHTML = '';
-  masterBarang.forEach(item => {
-    select.innerHTML += `<option value="${item.id}">${item.nama} (Sisa: ${item.jumlah} ${item.satuan})</option>`;
-  });
+      select.innerHTML = '';
+      masterBarang.forEach(item => {
+        select.innerHTML += `<option value="${item.id}">${item.nama} (Sisa: ${item.jumlah} ${item.satuan})</option>`;
+      });
 
-  // 3. Kembalikan pilihan ke barang yang sedang dipilih tadi (jika masih ada di daftar)
-  if (currentSelectedValue && masterBarang.some(b => String(b.id) === String(currentSelectedValue))) {
-    select.value = currentSelectedValue;
-  }
-}
-    // SIMPAN / UPDATE MASTER ADMIN
+      if (currentSelectedValue && masterBarang.some(b => String(b.id) === String(currentSelectedValue))) {
+        select.value = currentSelectedValue;
+      }
+    }
+
+    // SIMPAN / AKUMULASI STOK ADMIN
     function handleSaveStock(e) {
       e.preventDefault();
       const id = document.getElementById('editId').value || Date.now();
@@ -521,7 +544,15 @@ function populateSelectPetugas() {
       const satuan = document.getElementById('inputSatuan').value;
       const keterangan = document.getElementById('inputKeterangan').value;
 
-      const payload = { action: "SAVE_MASTER", id, nama, jumlah, satuan, keterangan };
+      const payload = { 
+        action: "SAVE_MASTER", 
+        id, 
+        nama, 
+        jumlah, 
+        satuan, 
+        keterangan, 
+        isEditMode: isEditMode 
+      };
 
       fetch(GAS_URL, {
         method: "POST",
@@ -539,7 +570,7 @@ function populateSelectPetugas() {
       const item = masterBarang.find(b => String(b.id) === String(id));
       if (!item) return;
 
-      const newJumlah = prompt(`Update jumlah stok untuk "${item.nama}":`, item.jumlah);
+      const newJumlah = prompt(`Ubah total sisa stok secara langsung untuk "${item.nama}":`, item.jumlah);
       if (newJumlah !== null && !isNaN(newJumlah) && newJumlah !== '') {
         const payload = {
           action: "SAVE_MASTER",
@@ -547,7 +578,8 @@ function populateSelectPetugas() {
           nama: item.nama,
           jumlah: parseFloat(newJumlah),
           satuan: item.satuan,
-          keterangan: item.keterangan
+          keterangan: item.keterangan,
+          isEditMode: true // Langsung timpa angka sisa stok
         };
 
         fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
@@ -559,13 +591,14 @@ function populateSelectPetugas() {
       const item = masterBarang.find(b => String(b.id) === String(id));
       if (!item) return;
 
+      isEditMode = true;
       document.getElementById('editId').value = item.id;
       document.getElementById('inputNamaBarang').value = item.nama;
       document.getElementById('inputJumlah').value = item.jumlah;
       document.getElementById('inputSatuan').value = item.satuan;
       document.getElementById('inputKeterangan').value = item.keterangan || '';
 
-      document.getElementById('formTitle').textContent = "Edit Data Stok Barang";
+      document.getElementById('formTitle').textContent = "Edit Data Stok Barang (Timpa Nilai)";
       document.getElementById('btnSubmitForm').textContent = "SIMPAN PERUBAHAN";
       document.getElementById('btnCancelEdit').classList.remove('hidden');
 
@@ -585,6 +618,7 @@ function populateSelectPetugas() {
     }
 
     function resetFormAdmin() {
+      isEditMode = false;
       document.getElementById('editId').value = "";
       document.getElementById('inputNamaBarang').value = "";
       document.getElementById('inputJumlah').value = "";
@@ -596,11 +630,12 @@ function populateSelectPetugas() {
       document.getElementById('btnCancelEdit').classList.add('hidden');
     }
 
-    // INPUT PEMAKAIAN PETUGAS
+    // FITUR BARU 1: INPUT PEMAKAIAN PETUGAS + KETERANGAN PERUSAHAAN
     function handlePetugasPemakaian(e) {
       e.preventDefault();
       const id = document.getElementById('petugasSelectBarang').value;
       const jumlahPakai = parseFloat(document.getElementById('petugasJumlah').value);
+      const keterangan = document.getElementById('petugasKeterangan').value;
 
       const item = masterBarang.find(b => String(b.id) === String(id));
       if (!item) return;
@@ -616,7 +651,8 @@ function populateSelectPetugas() {
         nama: item.nama,
         jumlahPakai: jumlahPakai,
         satuan: item.satuan,
-        petugas: "Petugas Dapur"
+        petugas: "Petugas Dapur",
+        keterangan: keterangan
       };
 
       fetch(GAS_URL, {
@@ -627,11 +663,54 @@ function populateSelectPetugas() {
       .then(() => {
         alert('✅ Pemakaian bahan berhasil dicatat!');
         document.getElementById('petugasJumlah').value = '';
+        document.getElementById('petugasKeterangan').value = '';
         fetchDataFromGAS();
       });
     }
 
-    // EXPORT LAPORAN EXCEL RAPI (Tabel, Style, Auto Gridlines)
+    // FITUR BARU 3: HAPUS 1 BARIS LOG TRANSAKSI
+    function hapusLogTransaksi(id) {
+      if (!confirm("Apakah Anda yakin ingin menghapus baris riwayat transaksi ini?")) return;
+
+      fetch(GAS_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "DELETE_LOG", id: id })
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.status === "SUCCESS") {
+          fetchDataFromGAS();
+        } else {
+          alert("Gagal menghapus log: " + result.message);
+        }
+      });
+    }
+
+    // FITUR BARU 3: RESET SEMUA LOG TRANSAKSI
+    function resetSemuaLog() {
+      const confirm1 = confirm("⚠️ PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SELURUH RIWAYAT LOG TRANSAKSI?");
+      if (!confirm1) return;
+
+      const confirm2 = prompt("Ketik 'RESET' untuk mengonfirmasi penghapusan seluruh data log:");
+      if (confirm2 !== "RESET") {
+        alert("Reset log dibatalkan.");
+        return;
+      }
+
+      fetch(GAS_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "RESET_LOG" })
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.status === "SUCCESS") {
+          alert("✅ Semua riwayat log transaksi berhasil dibersihkan!");
+          fetchDataFromGAS();
+        }
+      });
+    }
+
+    // EXPORT LAPORAN EXCEL RAPI
     function exportToExcelFormat() {
       const tanggalHariIni = new Date().toISOString().slice(0, 10);
       
@@ -687,7 +766,7 @@ function populateSelectPetugas() {
           </style>
         </head>
         <body>
-          <div class="title">LAPORAN STOK BARANG & BAHAN CATERING</div>
+          <div class="title">LAPORAN STOK BARANG & BAHAN DAFI CATERING</div>
           <div class="subtitle">Tanggal Cetak: ${tanggalHariIni}</div>
           
           <table>
@@ -709,10 +788,9 @@ function populateSelectPetugas() {
 
       const blob = new Blob([excelTemplate], { type: 'application/vnd.ms-excel' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
+      const link = document.body.appendChild(document.createElement("a"));
       link.href = url;
-      link.download = `Laporan_Stok_Catering_${tanggalHariIni}.xls`;
-      document.body.appendChild(link);
+      link.download = `Laporan_Stok_DafiCatering_${tanggalHariIni}.xls`;
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);

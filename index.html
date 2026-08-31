@@ -1,831 +1,381 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-950">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dafi Catering - Control System</title>
+  <title>Sistem Manajemen Stok & Pemakaian - Dafi Catering</title>
 
-  <link rel="icon" type="image/png" href="logo.png">
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Tom Select CSS (Fitur Searchable Dropdown) -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    /* Custom Styling Tom Select untuk Dark Mode */
+    .ts-control {
+      background-color: #374151 !important;
+      border-color: #4b5563 !important;
+      color: #ffffff !important;
+      border-radius: 0.5rem !important;
+      padding: 0.625rem 0.75rem !important;
+    }
+    .ts-control input {
+      color: #ffffff !important;
+    }
+    .ts-dropdown {
+      background-color: #1f2937 !important;
+      border-color: #4b5563 !important;
+      color: #ffffff !important;
+    }
+    .ts-dropdown .option {
+      color: #e5e7eb !important;
+    }
+    .ts-dropdown .option.active, .ts-dropdown .option:hover {
+      background-color: #374151 !important;
+      color: #ffffff !important;
+    }
   </style>
 </head>
-<body class="h-full text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
 
-  <!-- 1. LOGIN SCREEN -->
-  <div id="loginScreen" class="flex min-h-full items-center justify-center p-4">
-    <div class="w-full max-w-md space-y-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
-      <div class="text-center">
-        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20 shadow-lg shadow-amber-500/10 overflow-hidden">
-          <img src="logo.png" alt="Logo" class="h-full w-full object-cover hidden" id="loginLogoImg" onload="this.classList.remove('hidden'); document.getElementById('loginIconFallback').classList.add('hidden')">
-          <i data-lucide="utensils" id="loginIconFallback" class="h-7 w-7"></i>
-        </div>
-        <h2 class="mt-4 text-2xl font-extrabold tracking-tight text-white">Dafi Catering</h2>
-        <p class="mt-1 text-xs text-slate-400">Sistem Manajemen & Pemakaian Stok Bahan</p>
-      </div>
-
-      <form class="space-y-4" onsubmit="handleLogin(event)">
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Akses Sebagai</label>
-          <div class="grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-950 border border-slate-800">
-            <button type="button" onclick="setRole('admin')" id="btnLoginAdmin" class="py-2.5 text-xs font-bold rounded-lg bg-amber-500 text-slate-950 transition">👑 Admin</button>
-            <button type="button" onclick="setRole('petugas')" id="btnLoginPetugas" class="py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition">👤 Petugas Dapur</button>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">PIN Akses</label>
-          <input type="password" id="inputPin" placeholder="••••" required class="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-center text-lg font-bold tracking-widest text-white focus:border-amber-500 focus:outline-none">
-        </div>
-
-        <button type="submit" class="w-full rounded-xl bg-amber-500 py-3 text-xs font-bold text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition active:scale-95">
-          MASUK KE SISTEM
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- 2. DASHBOARD ADMIN -->
-  <div id="adminLayout" class="hidden min-h-full flex flex-col md:flex-row">
+  <div class="flex flex-col md:flex-row min-h-screen">
     
-    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-40 w-64 border-r border-slate-800/80 bg-slate-900 flex flex-col justify-between p-4 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out">
-      <div class="space-y-6">
-        <div class="flex items-center justify-between px-2">
-          <div class="flex items-center gap-3">
-            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-extrabold shadow-md shadow-amber-500/20 overflow-hidden">
-              <img src="logo.png" alt="Logo" class="h-full w-full object-cover hidden" onload="this.classList.remove('hidden'); document.getElementById('sidebarIconFallback').classList.add('hidden')">
-              <i data-lucide="chef-hat" id="sidebarIconFallback" class="h-5 w-5"></i>
-            </div>
-            <div>
-              <h1 class="font-bold text-sm text-white leading-none">Dafi Catering</h1>
-              <span class="text-[10px] text-amber-400 font-medium">Control System</span>
-            </div>
+    <!-- SIDEBAR -->
+    <aside class="w-full md:w-64 bg-gray-800 p-6 flex flex-col justify-between border-b md:border-b-0 md:border-r border-gray-700">
+      <div>
+        <div class="flex items-center space-x-3 mb-8">
+          <div class="p-2 bg-indigo-600 rounded-lg">
+            <i data-lucide="chef-hat" class="w-6 h-6 text-white"></i>
           </div>
-          <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white">
-            <i data-lucide="x" class="h-6 w-6"></i>
-          </button>
+          <div>
+            <h1 class="font-bold text-lg leading-tight">Dafi Catering</h1>
+            <p class="text-xs text-gray-400">Manajemen Stok</p>
+          </div>
         </div>
 
-        <nav class="space-y-1.5 text-xs font-medium">
-          <button onclick="switchAdminTab('stok')" id="menuStok" class="w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold">
-            <i data-lucide="package" class="h-4 w-4"></i> Data Stok
+        <nav class="space-y-2">
+          <button onclick="switchTab('stok')" id="nav-stok" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition-all">
+            <i data-lucide="boxes" class="w-5 h-5"></i>
+            <span>Stok Barang</span>
           </button>
-          <button onclick="switchAdminTab('pemakaian')" id="menuPemakaian" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-            <i data-lucide="clipboard-list" class="h-4 w-4"></i> Data Pemakaian
+          
+          <button onclick="switchTab('pemakaian')" id="nav-pemakaian" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-gray-200 font-medium transition-all">
+            <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+            <span>Data Pemakaian</span>
           </button>
-          <button onclick="switchAdminTab('inputAdmin')" id="menuInputAdmin" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-            <i data-lucide="plus-circle" class="h-4 w-4"></i> Tambah / Kelola Stok
-          </button>
-          <button onclick="switchAdminTab('laporan')" id="menuLaporan" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-            <i data-lucide="history" class="h-4 w-4"></i> Log Transaksi
+
+          <button onclick="switchTab('input')" id="nav-input" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-gray-200 font-medium transition-all">
+            <i data-lucide="minus-circle" class="w-5 h-5"></i>
+            <span>Catat Pemakaian</span>
           </button>
         </nav>
       </div>
 
-      <div class="border-t border-slate-800 pt-4 px-2 flex items-center justify-between">
-        <div class="text-xs">
-          <p class="font-bold text-white">Admin Dafi Catering</p>
-          <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-semibold">
-            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            Realtime Sync
-          </div>
-        </div>
-        <button onclick="logout()" title="Keluar" class="p-2 text-slate-400 hover:text-rose-400 transition">
-          <i data-lucide="log-out" class="h-4 w-4"></i>
+      <div class="pt-6 border-t border-gray-700">
+        <button onclick="fetchData()" class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-700 text-gray-300 rounded-lg text-sm transition-all">
+          <i data-lucide="refresh-cw" class="w-4 h-4" id="refresh-icon"></i>
+          <span>Refresh Data</span>
         </button>
       </div>
     </aside>
 
-    <div id="sidebarOverlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden"></div>
-
-    <div class="flex-1 flex flex-col min-w-0">
-      <header class="border-b border-slate-800/80 bg-slate-900/40 px-4 sm:px-8 py-3.5 flex items-center justify-between backdrop-blur-xl gap-2">
-        <div class="flex items-center gap-3">
-          <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-xl bg-slate-800 text-slate-300">
-            <i data-lucide="menu" class="h-5 w-5"></i>
-          </button>
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 p-6 md:p-8 overflow-y-auto">
+      
+      <!-- TAB STOK BARANG -->
+      <section id="tab-stok" class="space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 id="pageTitle" class="text-sm sm:text-lg font-bold text-white leading-tight">Pengelolaan Stok</h2>
-            <p id="pageSubTitle" class="text-[10px] sm:text-xs text-slate-400 hidden sm:block">Kelola bahan & barang Dafi Catering.</p>
+            <h2 class="text-2xl font-bold">Master Stok Barang</h2>
+            <p class="text-gray-400 text-sm">Daftar stok bahan baku yang tersedia di dapur</p>
+          </div>
+          <div class="relative min-w-[240px]">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" id="search-stok" placeholder="Cari bahan baku..." onkeyup="filterTable('stok')" class="w-full pl-9 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
           </div>
         </div>
 
-        <div class="flex items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900/90 px-3 py-1.5 sm:px-4 sm:py-2">
-          <i data-lucide="clock" class="h-4 w-4 text-amber-400"></i>
-          <div class="text-right">
-            <div id="clock24" class="text-xs sm:text-base font-extrabold tracking-wider text-white font-mono leading-none">00:00:00</div>
-            <div id="dateToday" class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">-</div>
+        <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse" id="table-stok">
+              <thead>
+                <tr class="bg-gray-700/50 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-700">
+                  <th class="p-4">No</th>
+                  <th class="p-4">Nama Barang</th>
+                  <th class="p-4">Jumlah Stok</th>
+                  <th class="p-4">Satuan</th>
+                  <th class="p-4">Keterangan</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-700/50 text-sm" id="tbody-stok">
+                <tr>
+                  <td colspan="5" class="p-8 text-center text-gray-400">Memuat data stok...</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-      </header>
+      </section>
 
-      <!-- TAB 1: DATA STOK BARANG -->
-      <main id="tabStok" class="p-4 sm:p-8 space-y-4 sm:space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <h3 class="text-sm sm:text-base font-bold text-white">Daftar Sisa Stok Bahan & Barang</h3>
-          <button onclick="exportToExcelFormat('stok')" class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/20 transition">
-            <i data-lucide="file-spreadsheet" class="h-4 w-4"></i> Export Stok (Excel)
-          </button>
-        </div>
-
-        <div class="hidden sm:block rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
-          <table class="w-full text-left text-xs text-slate-300">
-            <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
-              <tr>
-                <th class="px-4 py-3.5 text-center w-12">No</th>
-                <th class="px-6 py-3.5">Nama Barang / Bahan</th>
-                <th class="px-6 py-3.5 text-center">Sisa Stok</th>
-                <th class="px-6 py-3.5">Satuan</th>
-                <th class="px-6 py-3.5">Keterangan / Supplier</th>
-                <th class="px-6 py-3.5 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="tableMasterBody" class="divide-y divide-slate-800/60"></tbody>
-          </table>
-        </div>
-
-        <div id="mobileMasterList" class="sm:hidden space-y-3"></div>
-      </main>
-
-      <!-- TAB 2: DATA PEMAKAIAN -->
-      <main id="tabPemakaian" class="hidden p-4 sm:p-8 space-y-4 sm:space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <!-- TAB DATA PEMAKAIAN -->
+      <section id="tab-pemakaian" class="space-y-6 hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h3 class="text-sm sm:text-base font-bold text-white">Laporan Pemakaian Bahan (Petugas Dapur)</h3>
-            <p class="text-xs text-slate-400">Daftar penggunaan bahan untuk pelayanan catering/perusahaan.</p>
+            <h2 class="text-2xl font-bold">Data Pemakaian</h2>
+            <p class="text-gray-400 text-sm">Riwayat penggunaan bahan baku oleh petugas</p>
           </div>
-          <button onclick="exportToExcelFormat('pemakaian')" class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 text-xs shadow-lg shadow-amber-500/20 transition">
-            <i data-lucide="file-spreadsheet" class="h-4 w-4"></i> Export Data Pemakaian (Excel)
-          </button>
+          <div class="relative min-w-[240px]">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" id="search-pemakaian" placeholder="Cari riwayat pemakaian..." onkeyup="filterTable('pemakaian')" class="w-full pl-9 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+          </div>
         </div>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 space-y-3 sm:space-y-0 sm:flex sm:items-center sm:gap-4">
-          <div class="flex-1 flex items-center gap-2">
-            <i data-lucide="filter" class="h-4 w-4 text-amber-400 hidden sm:block"></i>
-            <span class="text-xs font-semibold text-slate-300 whitespace-nowrap">Filter Tanggal:</span>
+        <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse" id="table-pemakaian">
+              <thead>
+                <tr class="bg-gray-700/50 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-700">
+                  <th class="p-4">No</th>
+                  <th class="p-4">Tanggal</th>
+                  <th class="p-4">Jam</th>
+                  <th class="p-4">Nama Barang</th>
+                  <th class="p-4">Jumlah</th>
+                  <th class="p-4">Satuan</th>
+                  <th class="p-4">Petugas</th>
+                  <th class="p-4">Catatan</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-700/50 text-sm" id="tbody-pemakaian">
+                <tr>
+                  <td colspan="8" class="p-8 text-center text-gray-400">Memuat riwayat pemakaian...</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+        </div>
+      </section>
 
-          <div class="grid grid-cols-2 sm:flex items-center gap-2">
-            <div>
-              <input type="date" id="filterStartDate" onchange="renderTables()" class="w-full sm:w-auto rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
-            </div>
-            <span class="hidden sm:inline text-slate-500 text-xs">s/d</span>
-            <div>
-              <input type="date" id="filterEndDate" onchange="renderTables()" class="w-full sm:w-auto rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
-            </div>
-          </div>
-
-          <button onclick="resetFilterTanggal()" class="w-full sm:w-auto px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-medium transition flex items-center justify-center gap-1.5">
-            <i data-lucide="rotate-ccw" class="h-3.5 w-3.5"></i> Reset Filter
-          </button>
+      <!-- TAB INPUT PEMAKAIAN -->
+      <section id="tab-input" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-2xl font-bold">Catat Pemakaian Bahan</h2>
+          <p class="text-gray-400 text-sm">Form pengurangan stok untuk kebutuhan memasak</p>
         </div>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300 min-w-[750px]">
-            <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
-              <tr>
-                <th class="px-4 py-3">Tanggal Hari</th>
-                <th class="px-4 py-3">Jam</th>
-                <th class="px-4 py-3">Nama Barang / Bahan</th>
-                <th class="px-4 py-3 text-center">Jumlah Dipakai</th>
-                <th class="px-4 py-3">Satuan</th>
-                <th class="px-4 py-3">Petugas</th>
-                <th class="px-4 py-3">Perusahaan / Klien</th>
-                <th class="px-4 py-3 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="tablePemakaianBody" class="divide-y divide-slate-800/60"></tbody>
-          </table>
-        </div>
-      </main>
-
-      <!-- TAB 3: FORM INPUT/TAMBAH STOK ADMIN -->
-      <main id="tabInputAdmin" class="hidden p-4 sm:p-8 max-w-xl space-y-4">
-        <h3 id="formTitle" class="text-sm sm:text-base font-bold text-white">Tambah / Update Master Stok</h3>
-        <p class="text-xs text-amber-400 bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
-          💡 <b>Info:</b> Kolom keterangan diisi <b>Nama Perusahaan / Client / Supplier</b> agar konsisten dengan log transaksi.
-        </p>
-        
-        <form onsubmit="handleSaveStock(event)" class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6 space-y-4">
-          <input type="hidden" id="editId" value="">
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Barang / Bahan <span class="text-amber-500">*</span></label>
-            <input type="text" id="inputNamaBarang" required placeholder="Contoh: Daging Sapi Slice / Minyak Goreng" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
+        <div class="max-w-xl bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
+          <form id="form-pemakaian" onsubmit="submitPemakaian(event)" class="space-y-4">
+            
+            <!-- SEARCHABLE BARANG DROPDOWN -->
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Stok <span class="text-amber-500">*</span></label>
-              <input type="number" id="inputJumlah" step="any" min="0" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Satuan <span class="text-amber-500">*</span></label>
-              <select id="inputSatuan" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
-                <option value="kg">kg</option>
-                <option value="liter">liter</option>
-                <option value="pcs">pcs</option>
-                <option value="lonjor">lonjor</option>
-                <option value="jerigen">jerigen</option>
-                <option value="pack">pack</option>
-                <option value="dus">dus</option>
-                <option value="ikat">ikat</option>
+              <label class="block text-sm font-medium mb-1 text-gray-300">Pilih Barang</label>
+              <select id="select-barang" required placeholder="Cari atau pilih barang...">
+                <option value="">Pilih barang...</option>
               </select>
             </div>
-          </div>
 
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Perusahaan / Klien / Supplier <span class="text-slate-500">(Keterangan)</span></label>
-            <input type="text" id="inputKeterangan" placeholder="Contoh: PT Sampoerna / Pasar Subuh" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
-          </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-1 text-gray-300">Jumlah Terpakai</label>
+                <input type="number" step="any" id="input-jumlah" required min="0.01" placeholder="0" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-indigo-500">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1 text-gray-300">Satuan</label>
+                <input type="text" id="input-satuan" readonly placeholder="Otomatis" class="w-full px-3 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-gray-400 cursor-not-allowed">
+              </div>
+            </div>
 
-          <div class="flex gap-2 pt-2">
-            <button type="button" id="btnCancelEdit" onclick="resetFormAdmin()" class="hidden w-1/3 rounded-xl bg-slate-800 py-3 text-xs font-bold text-slate-300 hover:bg-slate-700 transition">Batal</button>
-            <button type="submit" id="btnSubmitForm" class="flex-1 rounded-xl bg-amber-500 py-3 text-xs font-bold text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition">
-              SIMPAN BARANG
+            <!-- SEARCHABLE PETUGAS DROPDOWN -->
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-300">Petugas Pemakai</label>
+              <select id="select-petugas" required placeholder="Cari nama petugas...">
+                <option value="">Pilih Petugas...</option>
+                <option value="Petugas Dapur">Petugas Dapur</option>
+                <option value="Ahmad">Ahmad</option>
+                <option value="Budi">Budi</option>
+                <option value="Siti">Siti</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-300">Catatan / Keterangan</label>
+              <textarea id="input-catatan" rows="2" placeholder="Contoh: Untuk menu prasmanan (opsional)" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-indigo-500"></textarea>
+            </div>
+
+            <button type="submit" id="btn-submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-all flex items-center justify-center space-x-2">
+              <i data-lucide="save" class="w-5 h-5"></i>
+              <span>Simpan Pemakaian</span>
             </button>
-          </div>
-        </form>
-      </main>
-
-      <!-- TAB 4: LOG TRANSAKSI -->
-      <main id="tabLaporan" class="hidden p-4 sm:p-8 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <h3 class="text-sm sm:text-base font-bold text-white">Semua Log Riwayat Aktivitas</h3>
-          <button onclick="resetSemuaLog()" class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/30 px-3.5 py-2 text-xs font-semibold transition">
-            <i data-lucide="trash" class="h-4 w-4"></i> Reset Semua Log
-          </button>
+          </form>
         </div>
+      </section>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300 min-w-[750px]">
-            <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
-              <tr>
-                <th class="px-4 py-3">Tanggal Hari</th>
-                <th class="px-4 py-3">Jam</th>
-                <th class="px-4 py-3">Nama Barang / Bahan</th>
-                <th class="px-4 py-3 text-center">Jumlah</th>
-                <th class="px-4 py-3">Satuan</th>
-                <th class="px-4 py-3">Petugas</th>
-                <th class="px-4 py-3">Perusahaan / KET</th>
-                <th class="px-4 py-3 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="tableLogBody" class="divide-y divide-slate-800/60"></tbody>
-          </table>
-        </div>
-      </main>
-
-    </div>
+    </main>
   </div>
 
-  <!-- 3. TAMPILAN PETUGAS DAPUR -->
-  <div id="petugasLayout" class="hidden min-h-full p-4 max-w-md mx-auto space-y-5">
-    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-      <div class="flex items-center gap-2">
-        <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-bold overflow-hidden">
-          <img src="logo.png" alt="Logo" class="h-full w-full object-cover hidden" onload="this.classList.remove('hidden'); document.getElementById('petugasIconFallback').classList.add('hidden')">
-          <i data-lucide="chef-hat" id="petugasIconFallback" class="h-4 w-4"></i>
-        </div>
-        <div>
-          <h1 class="font-bold text-sm text-white">Input Pemakaian Bahan</h1>
-          <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-medium">
-            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            Realtime Active
-          </div>
-        </div>
-      </div>
-      <button onclick="logout()" class="text-xs bg-slate-800 px-3 py-1.5 rounded-xl text-slate-300 hover:text-white">Keluar</button>
-    </div>
-
-    <form onsubmit="handlePetugasPemakaian(event)" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-4 shadow-xl backdrop-blur-xl">
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Pilih Bahan / Barang</label>
-        <select id="petugasSelectBarang" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none"></select>
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Dipakai</label>
-        <input type="number" id="petugasJumlah" step="any" min="0.1" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-center text-2xl font-bold text-amber-400 focus:border-amber-500 focus:outline-none">
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Perusahaan / Klien Dilayani</label>
-        <input type="text" id="petugasKeterangan" placeholder="Contoh: PT Sampoerna / Wedding Pak Budi" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
-      </div>
-
-      <button type="submit" class="w-full rounded-xl bg-amber-500 py-3.5 text-xs font-bold text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition active:scale-95">
-        💾 SIMPAN PEMAKAIAN BAHAN
-      </button>
-    </form>
-  </div>
+  <!-- Tom Select JS -->
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 
   <script>
-    // ⚠️ PASTIKAN URL SUDAH SESUAI DEPLOYMENT BARU SCRIPT ANDA
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzmSa4QRPXDX95uN_lRdPK12MMjGgBikZpIF2kYE8gdL6B3VNu0L5d5hZGHCWchH0NV/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxWQxY0DvLbpQPm7C4st4jw93GftFzqz7AYLUVfhSNObVgS2lYbAQOFZL2iQOCz_dc/exec"; // Masukkan URL Web App Anda
 
-    let masterBarang = [];
-    let logPemakaian = [];
-    let currentRole = 'admin';
-    let syncInterval = null;
-    let isEditMode = false;
+    let masterData = [];
+    let pemakaianData = [];
+    let selectBarangInstance, selectPetugasInstance;
 
-    lucide.createIcons();
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
 
-    function updateClock() {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
-      
-      const clockEl = document.getElementById('clock24');
-      if (clockEl) clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+      // Inisialisasi Search Dropdown menggunakan Tom Select
+      selectBarangInstance = new TomSelect('#select-barang', { create: false, sortField: { field: "text" } });
+      selectPetugasInstance = new TomSelect('#select-petugas', { create: false, sortField: { field: "text" } });
 
-      const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-      const dateEl = document.getElementById('dateToday');
-      if (dateEl) dateEl.textContent = now.toLocaleDateString('id-ID', options);
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+      // Auto-fill satuan saat barang dipilih
+      selectBarangInstance.on('change', (val) => {
+        const barang = masterData.find(b => b.nama === val);
+        document.getElementById('input-satuan').value = barang ? barang.satuan : '';
+      });
 
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('-translate-x-full');
-      document.getElementById('sidebarOverlay').classList.toggle('hidden');
-    }
+      fetchData();
+    });
 
-    function setRole(role) {
-      currentRole = role;
-      const btnAdmin = document.getElementById('btnLoginAdmin');
-      const btnPetugas = document.getElementById('btnLoginPetugas');
-      
-      if (role === 'admin') {
-        btnAdmin.className = "py-2.5 text-xs font-bold rounded-lg bg-amber-500 text-slate-950 transition";
-        btnPetugas.className = "py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition";
-      } else {
-        btnPetugas.className = "py-2.5 text-xs font-bold rounded-lg bg-amber-500 text-slate-950 transition";
-        btnAdmin.className = "py-2.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition";
-      }
+    function switchTab(tab) {
+      ['stok', 'pemakaian', 'input'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        document.getElementById(`nav-${t}`).className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-gray-200 font-medium transition-all";
+      });
+
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      document.getElementById(`nav-${tab}`).className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition-all";
     }
 
-    function handleLogin(e) {
-      e.preventDefault();
-      document.getElementById('loginScreen').classList.add('hidden');
-      if (currentRole === 'admin') {
-        document.getElementById('adminLayout').classList.remove('hidden');
-      } else {
-        document.getElementById('petugasLayout').classList.remove('hidden');
-      }
-      fetchDataFromGAS();
-      startRealtimeSync();
-    }
-
-    function logout() {
-      stopRealtimeSync();
-      document.getElementById('adminLayout').classList.add('hidden');
-      document.getElementById('petugasLayout').classList.add('hidden');
-      document.getElementById('loginScreen').classList.remove('hidden');
-    }
-
-    function startRealtimeSync() {
-      if (!syncInterval) {
-        syncInterval = setInterval(() => {
-          fetchDataFromGAS();
-        }, 4000); 
-      }
-    }
-
-    function stopRealtimeSync() {
-      if (syncInterval) {
-        clearInterval(syncInterval);
-        syncInterval = null;
-      }
-    }
-
-    function fetchDataFromGAS() {
-      if (!GAS_URL || GAS_URL.includes("YOUR_SCRIPT_ID")) return;
+    function fetchData() {
+      const refreshIcon = document.getElementById('refresh-icon');
+      refreshIcon.classList.add('animate-spin');
 
       fetch(`${GAS_URL}?action=GET_DATA`)
         .then(res => res.json())
         .then(data => {
-          if (data.status === "SUCCESS") {
-            masterBarang = data.master || [];
-            logPemakaian = data.log || [];
-            renderTables();
-            populateSelectPetugas();
+          if (data.status === 'success') {
+            masterData = data.masterBarang || [];
+            pemakaianData = data.pemakaian || [];
+
+            renderStokTable(masterData);
+            renderPemakaianTable(pemakaianData);
+            populateBarangDropdown(masterData);
           }
         })
-        .catch(err => console.error("Sync Error:", err));
+        .catch(err => console.error("Error fetching data:", err))
+        .finally(() => {
+          refreshIcon.classList.remove('animate-spin');
+        });
     }
 
-    function switchAdminTab(tab) {
-      const tabs = ['tabStok', 'tabPemakaian', 'tabInputAdmin', 'tabLaporan'];
-      const menus = ['menuStok', 'menuPemakaian', 'menuInputAdmin', 'menuLaporan'];
-
-      tabs.forEach(t => document.getElementById(t).classList.add('hidden'));
-      menus.forEach(m => {
-        document.getElementById(m).className = "w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition";
-      });
-
-      const pageTitle = document.getElementById('pageTitle');
-      const pageSubTitle = document.getElementById('pageSubTitle');
-
-      if (tab === 'stok') {
-        document.getElementById('tabStok').classList.remove('hidden');
-        document.getElementById('menuStok').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
-        pageTitle.textContent = "Pengelolaan Stok";
-        pageSubTitle.textContent = "Daftar sisa stok bahan & barang Dafi Catering.";
-      } else if (tab === 'pemakaian') {
-        document.getElementById('tabPemakaian').classList.remove('hidden');
-        document.getElementById('menuPemakaian').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
-        pageTitle.textContent = "Data Pemakaian Bahan";
-        pageSubTitle.textContent = "Riwayat pemakaian barang oleh petugas dapur.";
-      } else if (tab === 'inputAdmin') {
-        document.getElementById('tabInputAdmin').classList.remove('hidden');
-        document.getElementById('menuInputAdmin').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
-        pageTitle.textContent = "Tambah / Update Stok";
-        pageSubTitle.textContent = "Form penambahan atau update master stok.";
-      } else if (tab === 'laporan') {
-        document.getElementById('tabLaporan').classList.remove('hidden');
-        document.getElementById('menuLaporan').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
-        pageTitle.textContent = "Log Riwayat Transaksi";
-        pageSubTitle.textContent = "Semua riwayat masuk dan keluar bahan.";
-      }
-
-      if (window.innerWidth < 768) toggleSidebar();
-    }
-
-    function resetFilterTanggal() {
-      document.getElementById('filterStartDate').value = '';
-      document.getElementById('filterEndDate').value = '';
-      renderTables();
-    }
-
-    function getFilteredPemakaian() {
-      const start = document.getElementById('filterStartDate')?.value;
-      const end = document.getElementById('filterEndDate')?.value;
-
-      return logPemakaian.filter(log => {
-        if (log.tipe === "MASUK") return false; // Hanya tampilkan pemakaian
-        if (!start && !end) return true;
-        return true; 
-      });
-    }
-
-    function renderTables() {
-      // 1. Render Master Stok
-      const tbodyMaster = document.getElementById('tableMasterBody');
-      const mobileList = document.getElementById('mobileMasterList');
-      tbodyMaster.innerHTML = '';
-      mobileList.innerHTML = '';
-
-      masterBarang.forEach((item, index) => {
-        const no = index + 1;
-        tbodyMaster.innerHTML += `
-          <tr class="transition hover:bg-slate-800/30">
-            <td class="px-4 py-3.5 text-center font-mono text-slate-400">${no}</td>
-            <td class="px-6 py-3.5 font-semibold text-white">${item.nama}</td>
-            <td class="px-6 py-3.5 text-center font-bold text-amber-400 text-sm">${item.jumlah}</td>
-            <td class="px-6 py-3.5 text-slate-300 font-medium">${item.satuan}</td>
-            <td class="px-6 py-3.5 text-slate-400">${item.keterangan || '-'}</td>
-            <td class="px-6 py-3.5 text-center">
-              <div class="flex items-center justify-center gap-1.5">
-                <button onclick="quickUpdateStock('${item.id}')" title="Set Stok Manual" class="p-1.5 bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-slate-950 rounded-lg transition">
-                  <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i>
-                </button>
-                <button onclick="editBarang('${item.id}')" title="Edit Data" class="p-1.5 bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg transition">
-                  <i data-lucide="edit-3" class="h-3.5 w-3.5"></i>
-                </button>
-                <button onclick="deleteBarang('${item.id}')" title="Hapus Data" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition">
-                  <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        `;
-
-        mobileList.innerHTML += `
-          <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 space-y-3">
-            <div class="flex justify-between items-start">
-              <div>
-                <span class="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">#${no}</span>
-                <h4 class="font-bold text-white text-sm mt-1">${item.nama}</h4>
-                <p class="text-xs text-slate-400 mt-0.5">${item.keterangan || '-'}</p>
-              </div>
-              <div class="text-right">
-                <span class="text-lg font-extrabold text-amber-400">${item.jumlah}</span>
-                <span class="text-xs text-slate-400 block">${item.satuan}</span>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      // 2. Render Tabel Pemakaian
-      const tbodyPemakaian = document.getElementById('tablePemakaianBody');
-      const tbodyLog = document.getElementById('tableLogBody');
-      tbodyPemakaian.innerHTML = '';
-      tbodyLog.innerHTML = '';
-
-      const filteredPemakaian = getFilteredPemakaian();
-      filteredPemakaian.forEach(log => {
-        tbodyPemakaian.innerHTML += `
-          <tr class="transition hover:bg-slate-800/30">
-            <td class="px-4 py-3 text-slate-200 font-medium">${log.tanggal}</td>
-            <td class="px-4 py-3 font-mono text-slate-400">${log.jam}</td>
-            <td class="px-4 py-3 font-semibold text-white">${log.nama}</td>
-            <td class="px-4 py-3 text-center font-bold text-amber-400">${log.jumlah}</td>
-            <td class="px-4 py-3 text-slate-300 font-medium">${log.satuan}</td>
-            <td class="px-4 py-3 text-slate-300">${log.petugas}</td>
-            <td class="px-4 py-3 text-amber-300 font-semibold">${log.keterangan || '-'}</td>
-            <td class="px-4 py-3 text-center">
-              <button onclick="hapusLogTransaksi('${log.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition">
-                <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-
-      // 3. Render Log Transaksi
-      logPemakaian.forEach(log => {
-        const isMasuk = log.tipe === "MASUK";
-        tbodyLog.innerHTML += `
-          <tr class="transition hover:bg-slate-800/30">
-            <td class="px-4 py-3 text-slate-200 font-medium">${log.tanggal}</td>
-            <td class="px-4 py-3 font-mono text-slate-400">${log.jam}</td>
-            <td class="px-4 py-3 font-semibold text-white">${log.nama}</td>
-            <td class="px-4 py-3 text-center font-bold ${isMasuk ? 'text-emerald-400' : 'text-amber-400'}">
-              ${isMasuk ? '+' : ''}${log.jumlah}
-            </td>
-            <td class="px-4 py-3 text-slate-300 font-medium">${log.satuan}</td>
-            <td class="px-4 py-3 text-slate-300">${log.petugas}</td>
-            <td class="px-4 py-3 text-amber-300 font-semibold">${log.keterangan || '-'}</td>
-            <td class="px-4 py-3 text-center">
-              <button onclick="hapusLogTransaksi('${log.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition">
-                <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-
-      lucide.createIcons();
-    }
-
-    function populateSelectPetugas() {
-      const select = document.getElementById('petugasSelectBarang');
-      if (!select) return;
-
-      const currentSelectedValue = select.value;
-      select.innerHTML = '';
-      masterBarang.forEach(item => {
-        select.innerHTML += `<option value="${item.id}">${item.nama} (Sisa: ${item.jumlah} ${item.satuan})</option>`;
-      });
-
-      if (currentSelectedValue && masterBarang.some(b => String(b.id) === String(currentSelectedValue))) {
-        select.value = currentSelectedValue;
-      }
-    }
-
-    function handleSaveStock(e) {
-      e.preventDefault();
-      const id = document.getElementById('editId').value || Date.now();
-      const nama = document.getElementById('inputNamaBarang').value;
-      const jumlah = parseFloat(document.getElementById('inputJumlah').value);
-      const satuan = document.getElementById('inputSatuan').value;
-      const keterangan = document.getElementById('inputKeterangan').value;
-
-      const payload = { 
-        action: "SAVE_MASTER", 
-        id, 
-        nama, 
-        jumlah, 
-        satuan, 
-        keterangan,
-        petugas: "Admin",
-        isEditMode: isEditMode 
-      };
-
-      fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
-      .then(res => res.json())
-      .then(() => {
-        fetchDataFromGAS();
-        resetFormAdmin();
-        switchAdminTab('stok');
-      });
-    }
-
-    function quickUpdateStock(id) {
-      const item = masterBarang.find(b => String(b.id) === String(id));
-      if (!item) return;
-
-      const newJumlah = prompt(`Set jumlah sisa stok baru untuk "${item.nama}":`, item.jumlah);
-      if (newJumlah !== null && !isNaN(newJumlah) && newJumlah !== '') {
-        const payload = {
-          action: "SAVE_MASTER",
-          id: item.id,
-          nama: item.nama,
-          jumlah: parseFloat(newJumlah),
-          satuan: item.satuan,
-          keterangan: item.keterangan,
-          petugas: "Admin",
-          isEditMode: true
-        };
-
-        fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
-          .then(() => fetchDataFromGAS());
-      }
-    }
-
-    function editBarang(id) {
-      const item = masterBarang.find(b => String(b.id) === String(id));
-      if (!item) return;
-
-      isEditMode = true;
-      document.getElementById('editId').value = item.id;
-      document.getElementById('inputNamaBarang').value = item.nama;
-      document.getElementById('inputJumlah').value = item.jumlah;
-      document.getElementById('inputSatuan').value = item.satuan;
-      document.getElementById('inputKeterangan').value = item.keterangan || '';
-
-      document.getElementById('formTitle').textContent = "Edit Data Master Stok";
-      document.getElementById('btnSubmitForm').textContent = "SIMPAN PERUBAHAN";
-      document.getElementById('btnCancelEdit').classList.remove('hidden');
-
-      switchAdminTab('inputAdmin');
-    }
-
-    function deleteBarang(id) {
-      const item = masterBarang.find(b => String(b.id) === String(id));
-      if (!item) return;
-
-      if (confirm(`Hapus "${item.nama}" dari master stok?`)) {
-        fetch(GAS_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "DELETE_MASTER", id })
-        }).then(() => fetchDataFromGAS());
-      }
-    }
-
-    function resetFormAdmin() {
-      isEditMode = false;
-      document.getElementById('editId').value = "";
-      document.getElementById('inputNamaBarang').value = "";
-      document.getElementById('inputJumlah').value = "";
-      document.getElementById('inputSatuan').value = "kg";
-      document.getElementById('inputKeterangan').value = "";
-
-      document.getElementById('formTitle').textContent = "Tambah / Update Master Stok";
-      document.getElementById('btnSubmitForm').textContent = "SIMPAN BARANG";
-      document.getElementById('btnCancelEdit').classList.add('hidden');
-    }
-
-    function handlePetugasPemakaian(e) {
-      e.preventDefault();
-      const id = document.getElementById('petugasSelectBarang').value;
-      const jumlahPakai = parseFloat(document.getElementById('petugasJumlah').value);
-      const keterangan = document.getElementById('petugasKeterangan').value;
-
-      const item = masterBarang.find(b => String(b.id) === String(id));
-      if (!item) return;
-
-      if (jumlahPakai > item.jumlah) {
-        alert(`❌ Stok tidak cukup! Sisa stok ${item.nama} hanya ${item.jumlah} ${item.satuan}.`);
+    function renderStokTable(data) {
+      const tbody = document.getElementById('tbody-stok');
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400">Belum ada data stok.</td></tr>`;
         return;
       }
 
-      const payload = {
-        action: "CATAT_PEMAKAIAN",
-        id: item.id,
-        nama: item.nama,
-        jumlahPakai: jumlahPakai,
-        satuan: item.satuan,
-        petugas: "Petugas Dapur",
-        keterangan: keterangan
-      };
+      tbody.innerHTML = data.map((item, index) => `
+        <tr class="hover:bg-gray-700/30 transition-all">
+          <td class="p-4 text-gray-400">${index + 1}</td>
+          <td class="p-4 font-semibold text-white">${item.nama}</td>
+          <td class="p-4">
+            <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${item.jumlah < 5 ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}">
+              ${item.jumlah}
+            </span>
+          </td>
+          <td class="p-4 text-gray-300">${item.satuan}</td>
+          <td class="p-4 text-gray-400">${item.keterangan || '-'}</td>
+        </tr>
+      `).join('');
+    }
 
-      fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
-      .then(res => res.json())
-      .then(() => {
-        alert('✅ Pemakaian bahan berhasil dicatat!');
-        document.getElementById('petugasJumlah').value = '';
-        document.getElementById('petugasKeterangan').value = '';
-        fetchDataFromGAS();
+    function renderPemakaianTable(data) {
+      const tbody = document.getElementById('tbody-pemakaian');
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-gray-400">Belum ada data pemakaian.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.map((item, index) => `
+        <tr class="hover:bg-gray-700/30 transition-all">
+          <td class="p-4 text-gray-400">${index + 1}</td>
+          <td class="p-4 text-gray-300">${item.tanggal}</td>
+          <td class="p-4 text-gray-400">${item.jam}</td>
+          <td class="p-4 font-semibold text-white">${item.namaBarang}</td>
+          <td class="p-4 text-indigo-400 font-semibold">${item.jumlah}</td>
+          <td class="p-4 text-gray-300">${item.satuan}</td>
+          <td class="p-4 text-gray-300">${item.petugas}</td>
+          <td class="p-4 text-gray-400">${item.catatan || '-'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function populateBarangDropdown(data) {
+      selectBarangInstance.clearOptions();
+      data.forEach(item => {
+        selectBarangInstance.addOption({ value: item.nama, text: `${item.nama} (Sisa: ${item.jumlah} ${item.satuan})` });
       });
     }
 
-    function hapusLogTransaksi(id) {
-      if (!confirm("Hapus baris riwayat transaksi ini?")) return;
+    function filterTable(type) {
+      const query = document.getElementById(`search-${type}`).value.toLowerCase();
+      if (type === 'stok') {
+        const filtered = masterData.filter(item => item.nama.toLowerCase().includes(query));
+        renderStokTable(filtered);
+      } else {
+        const filtered = pemakaianData.filter(item => 
+          item.namaBarang.toLowerCase().includes(query) || 
+          item.petugas.toLowerCase().includes(query)
+        );
+        renderPemakaianTable(filtered);
+      }
+    }
+
+    function submitPemakaian(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i><span>Menyimpan...</span>`;
+      lucide.createIcons();
+
+      const payload = {
+        action: "TAMBAH_PEMAKAIAN",
+        namaBarang: selectBarangInstance.getValue(),
+        jumlah: Number(document.getElementById('input-jumlah').value),
+        satuan: document.getElementById('input-satuan').value,
+        petugas: selectPetugasInstance.getValue(),
+        catatan: document.getElementById('input-catatan').value
+      };
 
       fetch(GAS_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "DELETE_LOG", id: id })
-      }).then(() => fetchDataFromGAS());
-    }
-
-    function resetSemuaLog() {
-      if (confirm("Hapus SELURUH LOG TRANSAKSI?")) {
-        fetch(GAS_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "RESET_LOG" })
-        }).then(() => fetchDataFromGAS());
-      }
-    }
-
-    function exportToExcelFormat(type) {
-      const tanggalHariIni = new Date().toISOString().slice(0, 10);
-      let fileName = `Laporan_Stok_${tanggalHariIni}.xls`;
-      let title = "LAPORAN SISA STOK BARANG & BAHAN DAFI CATERING";
-      let tableHeaders = "";
-      let tableRows = "";
-
-      if (type === 'stok') {
-        tableHeaders = `
-          <tr>
-            <th>No</th>
-            <th>Nama Barang</th>
-            <th>Sisa Stok</th>
-            <th>Satuan</th>
-            <th>Keterangan / Supplier</th>
-          </tr>
-        `;
-        masterBarang.forEach((item, index) => {
-          tableRows += `
-            <tr>
-              <td style="text-align: center;">${index + 1}</td>
-              <td>${item.nama}</td>
-              <td style="text-align: right; font-weight: bold;">${item.jumlah}</td>
-              <td style="text-align: center;">${item.satuan}</td>
-              <td>${item.keterangan || '-'}</td>
-            </tr>
-          `;
-        });
-      } else if (type === 'pemakaian') {
-        const dataPemakaianFiltered = getFilteredPemakaian();
-        fileName = `Laporan_Pemakaian_Bahan_${tanggalHariIni}.xls`;
-        title = `LAPORAN PEMAKAIAN BAHAN DAFI CATERING`;
-        
-        tableHeaders = `
-          <tr>
-            <th>Tanggal Hari</th>
-            <th>Jam</th>
-            <th>Nama Barang</th>
-            <th>Jumlah Dipakai</th>
-            <th>Satuan</th>
-            <th>Petugas</th>
-            <th>Perusahaan / Klien</th>
-          </tr>
-        `;
-        
-        dataPemakaianFiltered.forEach((item) => {
-          tableRows += `
-            <tr>
-              <td>${item.tanggal}</td>
-              <td style="text-align: center;">${item.jam}</td>
-              <td>${item.nama}</td>
-              <td style="text-align: right; font-weight: bold;">${item.jumlah}</td>
-              <td style="text-align: center;">${item.satuan}</td>
-              <td>${item.petugas}</td>
-              <td>${item.keterangan || '-'}</td>
-            </tr>
-          `;
-        });
-      }
-
-      const excelTemplate = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body { font-family: 'Calibri', sans-serif; }
-            .title { font-size: 14pt; font-weight: bold; text-align: center; }
-            table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-            th { background-color: #f59e0b; color: #000; font-weight: bold; border: 1px solid #d97706; padding: 6px; }
-            td { border: 1px solid #ccc; padding: 6px; }
-          </style>
-        </head>
-        <body>
-          <div class="title">${title}</div>
-          <table><thead>${tableHeaders}</thead><tbody>${tableRows}</tbody></table>
-        </body>
-        </html>
-      `;
-
-      const blob = new Blob([excelTemplate], { type: 'application/vnd.ms-excel' });
-      const url = URL.createObjectURL(blob);
-      const link = document.body.appendChild(document.createElement("a"));
-      link.href = url;
-      link.download = fileName;
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === 'success') {
+          alert('Pemakaian berhasil dicatat!');
+          document.getElementById('form-pemakaian').reset();
+          selectBarangInstance.clear();
+          selectPetugasInstance.clear();
+          fetchData();
+          switchTab('pemakaian');
+        } else {
+          alert('Gagal menyimpan: ' + res.message);
+        }
+      })
+      .catch(err => alert('Terjadi kesalahan jaringan.'))
+      .finally(() => {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i><span>Simpan Pemakaian</span>`;
+        lucide.createIcons();
+      });
     }
   </script>
 </body>

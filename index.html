@@ -5,18 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dafi Catering - Control System</title>
 
-  <!-- Favicon Logo -->
   <link rel="icon" type="image/png" href="logo.png">
-  
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Font Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
@@ -25,15 +18,12 @@
 </head>
 <body class="h-full text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
 
-  <!-- ================================================================= -->
-  <!-- 1. HALAMAN LOGIN                                                  -->
-  <!-- ================================================================= -->
+  <!-- 1. LOGIN SCREEN -->
   <div id="loginScreen" class="flex min-h-full items-center justify-center p-4">
     <div class="w-full max-w-md space-y-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
-      
       <div class="text-center">
         <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20 shadow-lg shadow-amber-500/10 overflow-hidden">
-          <img src="logo.png" alt="Logo Dafi Catering" class="h-full w-full object-cover hidden" id="loginLogoImg" onload="this.classList.remove('hidden'); document.getElementById('loginIconFallback').classList.add('hidden')">
+          <img src="logo.png" alt="Logo" class="h-full w-full object-cover hidden" id="loginLogoImg" onload="this.classList.remove('hidden'); document.getElementById('loginIconFallback').classList.add('hidden')">
           <i data-lucide="utensils" id="loginIconFallback" class="h-7 w-7"></i>
         </div>
         <h2 class="mt-4 text-2xl font-extrabold tracking-tight text-white">Dafi Catering</h2>
@@ -58,17 +48,12 @@
           MASUK KE SISTEM
         </button>
       </form>
-
     </div>
   </div>
 
-
-  <!-- ================================================================= -->
-  <!-- 2. DASHBOARD ADMIN                                                -->
-  <!-- ================================================================= -->
+  <!-- 2. DASHBOARD ADMIN -->
   <div id="adminLayout" class="hidden min-h-full flex flex-col md:flex-row">
     
-    <!-- SIDEBAR NAVIGATION -->
     <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-40 w-64 border-r border-slate-800/80 bg-slate-900 flex flex-col justify-between p-4 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out">
       <div class="space-y-6">
         <div class="flex items-center justify-between px-2">
@@ -87,7 +72,6 @@
           </button>
         </div>
 
-        <!-- MENU NAVIGASI KIRI -->
         <nav class="space-y-1.5 text-xs font-medium">
           <button onclick="switchAdminTab('stok')" id="menuStok" class="w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold">
             <i data-lucide="package" class="h-4 w-4"></i> Data Stok
@@ -120,10 +104,7 @@
 
     <div id="sidebarOverlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden"></div>
 
-    <!-- MAIN CONTENT -->
     <div class="flex-1 flex flex-col min-w-0">
-      
-      <!-- TOPBAR -->
       <header class="border-b border-slate-800/80 bg-slate-900/40 px-4 sm:px-8 py-3.5 flex items-center justify-between backdrop-blur-xl gap-2">
         <div class="flex items-center gap-3">
           <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-xl bg-slate-800 text-slate-300">
@@ -135,12 +116,11 @@
           </div>
         </div>
 
-        <!-- JAM DIGITAL 24-JAM -->
         <div class="flex items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900/90 px-3 py-1.5 sm:px-4 sm:py-2">
           <i data-lucide="clock" class="h-4 w-4 text-amber-400"></i>
           <div class="text-right">
             <div id="clock24" class="text-xs sm:text-base font-extrabold tracking-wider text-white font-mono leading-none">00:00:00</div>
-            <div id="dateToday" class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">Rabu, 19 Agt 2026</div>
+            <div id="dateToday" class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">-</div>
           </div>
         </div>
       </header>
@@ -162,22 +142,18 @@
                 <th class="px-6 py-3.5">Nama Barang / Bahan</th>
                 <th class="px-6 py-3.5 text-center">Sisa Stok</th>
                 <th class="px-6 py-3.5">Satuan</th>
-                <th class="px-6 py-3.5">Keterangan</th>
+                <th class="px-6 py-3.5">Keterangan / Supplier</th>
                 <th class="px-6 py-3.5 text-center">Aksi</th>
               </tr>
             </thead>
-            <tbody id="tableMasterBody" class="divide-y divide-slate-800/60">
-              <!-- Render JS -->
-            </tbody>
+            <tbody id="tableMasterBody" class="divide-y divide-slate-800/60"></tbody>
           </table>
         </div>
 
-        <div id="mobileMasterList" class="sm:hidden space-y-3">
-          <!-- Render JS -->
-        </div>
+        <div id="mobileMasterList" class="sm:hidden space-y-3"></div>
       </main>
 
-      <!-- TAB 2: DATA PEMAKAIAN (DILENGKAPI FILTER TANGGAL) -->
+      <!-- TAB 2: DATA PEMAKAIAN -->
       <main id="tabPemakaian" class="hidden p-4 sm:p-8 space-y-4 sm:space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
@@ -189,7 +165,6 @@
           </button>
         </div>
 
-        <!-- FITUR FILTER RENTANG TANGGAL -->
         <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 space-y-3 sm:space-y-0 sm:flex sm:items-center sm:gap-4">
           <div class="flex-1 flex items-center gap-2">
             <i data-lucide="filter" class="h-4 w-4 text-amber-400 hidden sm:block"></i>
@@ -198,12 +173,10 @@
 
           <div class="grid grid-cols-2 sm:flex items-center gap-2">
             <div>
-              <label class="block text-[10px] text-slate-400 mb-1 sm:hidden">Mulai Tanggal</label>
               <input type="date" id="filterStartDate" onchange="renderTables()" class="w-full sm:w-auto rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
             </div>
             <span class="hidden sm:inline text-slate-500 text-xs">s/d</span>
             <div>
-              <label class="block text-[10px] text-slate-400 mb-1 sm:hidden">Sampai Tanggal</label>
               <input type="date" id="filterEndDate" onchange="renderTables()" class="w-full sm:w-auto rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
             </div>
           </div>
@@ -214,12 +187,12 @@
         </div>
 
         <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300 min-w-[700px]">
+          <table class="w-full text-left text-xs text-slate-300 min-w-[750px]">
             <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
               <tr>
-                <th class="px-4 py-3">Tanggal</th>
+                <th class="px-4 py-3">Tanggal Hari</th>
                 <th class="px-4 py-3">Jam</th>
-                <th class="px-4 py-3">Nama Bahan / Barang</th>
+                <th class="px-4 py-3">Nama Barang / Bahan</th>
                 <th class="px-4 py-3 text-center">Jumlah Dipakai</th>
                 <th class="px-4 py-3">Satuan</th>
                 <th class="px-4 py-3">Petugas</th>
@@ -227,18 +200,16 @@
                 <th class="px-4 py-3 text-center">Aksi</th>
               </tr>
             </thead>
-            <tbody id="tablePemakaianBody" class="divide-y divide-slate-800/60">
-              <!-- Render JS -->
-            </tbody>
+            <tbody id="tablePemakaianBody" class="divide-y divide-slate-800/60"></tbody>
           </table>
         </div>
       </main>
 
-      <!-- TAB 3: FORM STOK ADMIN -->
+      <!-- TAB 3: FORM INPUT/TAMBAH STOK ADMIN -->
       <main id="tabInputAdmin" class="hidden p-4 sm:p-8 max-w-xl space-y-4">
-        <h3 id="formTitle" class="text-sm sm:text-base font-bold text-white">Tambah / Update Stok Barang</h3>
+        <h3 id="formTitle" class="text-sm sm:text-base font-bold text-white">Tambah / Update Master Stok</h3>
         <p class="text-xs text-amber-400 bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
-          💡 <b>Info:</b> Jika barang sudah ada, jumlah yang diinput di sini akan <b>otomatis dijumlahkan/ditambahkan</b> ke sisa stok yang ada.
+          💡 <b>Info:</b> Kolom keterangan diisi <b>Nama Perusahaan / Client / Supplier</b> agar konsisten dengan log transaksi.
         </p>
         
         <form onsubmit="handleSaveStock(event)" class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6 space-y-4">
@@ -246,30 +217,39 @@
 
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Barang / Bahan <span class="text-amber-500">*</span></label>
-            <input type="text" id="inputNamaBarang" required placeholder="Contoh: Daging Sapi Slice / Piring Melamin" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
+            <input type="text" id="inputNamaBarang" required placeholder="Contoh: Daging Sapi Slice / Minyak Goreng" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Tambahan <span class="text-amber-500">*</span></label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Stok <span class="text-amber-500">*</span></label>
               <input type="number" id="inputJumlah" step="any" min="0" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-slate-300 mb-1">Satuan <span class="text-amber-500">*</span></label>
-              <input type="text" id="inputSatuan" required placeholder="kg, liter, pcs, pack" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
+              <select id="inputSatuan" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
+                <option value="kg">kg</option>
+                <option value="liter">liter</option>
+                <option value="pcs">pcs</option>
+                <option value="lonjor">lonjor</option>
+                <option value="jerigen">jerigen</option>
+                <option value="pack">pack</option>
+                <option value="dus">dus</option>
+                <option value="ikat">ikat</option>
+              </select>
             </div>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Keterangan <span class="text-slate-500">(Opsional)</span></label>
-            <input type="text" id="inputKeterangan" placeholder="Contoh: Pembelian dari Pasar Subuh" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-slate-200 focus:border-amber-500 focus:outline-none">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Perusahaan / Klien / Supplier <span class="text-slate-500">(Keterangan)</span></label>
+            <input type="text" id="inputKeterangan" placeholder="Contoh: PT Sampoerna / Pasar Subuh" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
           </div>
 
           <div class="flex gap-2 pt-2">
             <button type="button" id="btnCancelEdit" onclick="resetFormAdmin()" class="hidden w-1/3 rounded-xl bg-slate-800 py-3 text-xs font-bold text-slate-300 hover:bg-slate-700 transition">Batal</button>
             <button type="submit" id="btnSubmitForm" class="flex-1 rounded-xl bg-amber-500 py-3 text-xs font-bold text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition">
-              SIMPAN STOK BARANG
+              SIMPAN BARANG
             </button>
           </div>
         </form>
@@ -285,22 +265,20 @@
         </div>
 
         <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300 min-w-[700px]">
+          <table class="w-full text-left text-xs text-slate-300 min-w-[750px]">
             <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
               <tr>
-                <th class="px-4 py-3">Tanggal</th>
+                <th class="px-4 py-3">Tanggal Hari</th>
                 <th class="px-4 py-3">Jam</th>
                 <th class="px-4 py-3">Nama Barang / Bahan</th>
                 <th class="px-4 py-3 text-center">Jumlah</th>
                 <th class="px-4 py-3">Satuan</th>
                 <th class="px-4 py-3">Petugas</th>
-                <th class="px-4 py-3">Perusahaan / Ket</th>
+                <th class="px-4 py-3">Perusahaan / KET</th>
                 <th class="px-4 py-3 text-center">Aksi</th>
               </tr>
             </thead>
-            <tbody id="tableLogBody" class="divide-y divide-slate-800/60">
-              <!-- Render JS -->
-            </tbody>
+            <tbody id="tableLogBody" class="divide-y divide-slate-800/60"></tbody>
           </table>
         </div>
       </main>
@@ -308,12 +286,8 @@
     </div>
   </div>
 
-
-  <!-- ================================================================= -->
-  <!-- 3. TAMPILAN PETUGAS DAPUR                                         -->
-  <!-- ================================================================= -->
+  <!-- 3. TAMPILAN PETUGAS DAPUR -->
   <div id="petugasLayout" class="hidden min-h-full p-4 max-w-md mx-auto space-y-5">
-    
     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
       <div class="flex items-center gap-2">
         <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-bold overflow-hidden">
@@ -332,39 +306,30 @@
     </div>
 
     <form onsubmit="handlePetugasPemakaian(event)" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-4 shadow-xl backdrop-blur-xl">
-      
       <div>
         <label class="block text-xs font-semibold text-slate-300 mb-1">Pilih Bahan / Barang</label>
-        <select id="petugasSelectBarang" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
-          <!-- Options JS -->
-        </select>
+        <select id="petugasSelectBarang" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none"></select>
       </div>
 
       <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Yang Dipakai</label>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Dipakai</label>
         <input type="number" id="petugasJumlah" step="any" min="0.1" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-center text-2xl font-bold text-amber-400 focus:border-amber-500 focus:outline-none">
       </div>
 
       <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Perusahaan / Klien Dilayani <span class="text-slate-500">(Opsional)</span></label>
-        <input type="text" id="petugasKeterangan" placeholder="Contoh: PT Sampoerna / Catering Wedding" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Perusahaan / Klien Dilayani</label>
+        <input type="text" id="petugasKeterangan" placeholder="Contoh: PT Sampoerna / Wedding Pak Budi" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
       </div>
 
       <button type="submit" class="w-full rounded-xl bg-amber-500 py-3.5 text-xs font-bold text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition active:scale-95">
         💾 SIMPAN PEMAKAIAN BAHAN
       </button>
-
     </form>
-
   </div>
 
-
-  <!-- ================================================================= -->
-  <!-- 4. JAVASCRIPT LOGIC & REAL-TIME SYNC                              -->
-  <!-- ================================================================= -->
   <script>
-    // ⚠️ PASTIKAN SCRIPT ID GOOGLE APPS SCRIPT SUDAH SAMA
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyvAjqA6WjZBetSVD6d7y-C-fD5D5GX6ibo-VHrOLyVqy33-DJj9JbGvc5aS96eIZ-D/exec";
+    // ⚠️ PASTIKAN URL SUDAH SESUAI DEPLOYMENT BARU SCRIPT ANDA
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyiD_joCm_jfMzFWQpATUPBHTcVoFOrE3WyF-ClOgFR47wvXOjUEmabWhTnybeVXzu8/exec";
 
     let masterBarang = [];
     let logPemakaian = [];
@@ -374,7 +339,6 @@
 
     lucide.createIcons();
 
-    // Clock
     function updateClock() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -384,7 +348,7 @@
       const clockEl = document.getElementById('clock24');
       if (clockEl) clockEl.textContent = `${hours}:${minutes}:${seconds}`;
 
-      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
       const dateEl = document.getElementById('dateToday');
       if (dateEl) dateEl.textContent = now.toLocaleDateString('id-ID', options);
     }
@@ -413,13 +377,11 @@
     function handleLogin(e) {
       e.preventDefault();
       document.getElementById('loginScreen').classList.add('hidden');
-      
       if (currentRole === 'admin') {
         document.getElementById('adminLayout').classList.remove('hidden');
       } else {
         document.getElementById('petugasLayout').classList.remove('hidden');
       }
-
       fetchDataFromGAS();
       startRealtimeSync();
     }
@@ -510,19 +472,14 @@
       const end = document.getElementById('filterEndDate')?.value;
 
       return logPemakaian.filter(log => {
-        if (!log.tanggal || log.tanggal === '-') return true;
-        
-        // Format tanggal log (yyyy-mm-dd)
-        let tglLog = log.tanggal;
-        if (start && tglLog < start) return false;
-        if (end && tglLog > end) return false;
-
-        return true;
+        if (log.tipe === "MASUK") return false; // Hanya tampilkan pemakaian
+        if (!start && !end) return true;
+        return true; 
       });
     }
 
     function renderTables() {
-      // 1. Render Tabel Master Stok
+      // 1. Render Master Stok
       const tbodyMaster = document.getElementById('tableMasterBody');
       const mobileList = document.getElementById('mobileMasterList');
       tbodyMaster.innerHTML = '';
@@ -535,11 +492,11 @@
             <td class="px-4 py-3.5 text-center font-mono text-slate-400">${no}</td>
             <td class="px-6 py-3.5 font-semibold text-white">${item.nama}</td>
             <td class="px-6 py-3.5 text-center font-bold text-amber-400 text-sm">${item.jumlah}</td>
-            <td class="px-6 py-3.5 text-slate-300">${item.satuan}</td>
+            <td class="px-6 py-3.5 text-slate-300 font-medium">${item.satuan}</td>
             <td class="px-6 py-3.5 text-slate-400">${item.keterangan || '-'}</td>
             <td class="px-6 py-3.5 text-center">
               <div class="flex items-center justify-center gap-1.5">
-                <button onclick="quickUpdateStock('${item.id}')" title="Set Sisa Stok Manual" class="p-1.5 bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-slate-950 rounded-lg transition">
+                <button onclick="quickUpdateStock('${item.id}')" title="Set Stok Manual" class="p-1.5 bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-slate-950 rounded-lg transition">
                   <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i>
                 </button>
                 <button onclick="editBarang('${item.id}')" title="Edit Data" class="p-1.5 bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white rounded-lg transition">
@@ -566,65 +523,52 @@
                 <span class="text-xs text-slate-400 block">${item.satuan}</span>
               </div>
             </div>
-            <div class="pt-2 border-t border-slate-800/80 flex gap-2">
-              <button onclick="quickUpdateStock('${item.id}')" class="flex-1 flex items-center justify-center gap-1 py-1.5 bg-amber-500/10 text-amber-400 rounded-xl text-xs font-semibold">
-                <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i> Set Stok
-              </button>
-              <button onclick="editBarang('${item.id}')" class="flex-1 flex items-center justify-center gap-1 py-1.5 bg-blue-500/10 text-blue-400 rounded-xl text-xs font-semibold">
-                <i data-lucide="edit-3" class="h-3.5 w-3.5"></i> Edit
-              </button>
-              <button onclick="deleteBarang('${item.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 rounded-xl text-xs">
-                <i data-lucide="trash-2" class="h-4 w-4"></i>
-              </button>
-            </div>
           </div>
         `;
       });
 
-      // 2. Render Tabel Data Pemakaian (Dengan Filter)
+      // 2. Render Tabel Pemakaian
       const tbodyPemakaian = document.getElementById('tablePemakaianBody');
       const tbodyLog = document.getElementById('tableLogBody');
       tbodyPemakaian.innerHTML = '';
       tbodyLog.innerHTML = '';
 
       const filteredPemakaian = getFilteredPemakaian();
-
-      if (filteredPemakaian.length === 0) {
-        tbodyPemakaian.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-500 italic">Tidak ada data pemakaian pada rentang tanggal ini.</td></tr>`;
-      } else {
-        filteredPemakaian.forEach(log => {
-          tbodyPemakaian.innerHTML += `
-            <tr class="transition hover:bg-slate-800/30">
-              <td class="px-4 py-3 text-slate-300 font-medium">${log.tanggal}</td>
-              <td class="px-4 py-3 font-mono text-slate-400">${log.jam}</td>
-              <td class="px-4 py-3 font-semibold text-white">${log.nama}</td>
-              <td class="px-4 py-3 text-center font-bold text-amber-400">${log.jumlah || 0}</td>
-              <td class="px-4 py-3 text-slate-300">${log.satuan}</td>
-              <td class="px-4 py-3 text-slate-300">${log.petugas}</td>
-              <td class="px-4 py-3 text-amber-300 font-medium">${log.keterangan || '-'}</td>
-              <td class="px-4 py-3 text-center">
-                <button onclick="hapusLogTransaksi('${log.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition" title="Hapus Log Ini">
-                  <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
-                </button>
-              </td>
-            </tr>
-          `;
-        });
-      }
-
-      // 3. Render Log Semua Transaksi
-      logPemakaian.forEach(log => {
-        tbodyLog.innerHTML += `
+      filteredPemakaian.forEach(log => {
+        tbodyPemakaian.innerHTML += `
           <tr class="transition hover:bg-slate-800/30">
-            <td class="px-4 py-3 text-slate-300 font-medium">${log.tanggal}</td>
+            <td class="px-4 py-3 text-slate-200 font-medium">${log.tanggal}</td>
             <td class="px-4 py-3 font-mono text-slate-400">${log.jam}</td>
             <td class="px-4 py-3 font-semibold text-white">${log.nama}</td>
-            <td class="px-4 py-3 text-center font-bold text-amber-400">${log.jumlah || 0}</td>
-            <td class="px-4 py-3 text-slate-300">${log.satuan}</td>
+            <td class="px-4 py-3 text-center font-bold text-amber-400">${log.jumlah}</td>
+            <td class="px-4 py-3 text-slate-300 font-medium">${log.satuan}</td>
             <td class="px-4 py-3 text-slate-300">${log.petugas}</td>
-            <td class="px-4 py-3 text-amber-300 font-medium">${log.keterangan || '-'}</td>
+            <td class="px-4 py-3 text-amber-300 font-semibold">${log.keterangan || '-'}</td>
             <td class="px-4 py-3 text-center">
-              <button onclick="hapusLogTransaksi('${log.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition" title="Hapus Log Ini">
+              <button onclick="hapusLogTransaksi('${log.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition">
+                <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      // 3. Render Log Transaksi
+      logPemakaian.forEach(log => {
+        const isMasuk = log.tipe === "MASUK";
+        tbodyLog.innerHTML += `
+          <tr class="transition hover:bg-slate-800/30">
+            <td class="px-4 py-3 text-slate-200 font-medium">${log.tanggal}</td>
+            <td class="px-4 py-3 font-mono text-slate-400">${log.jam}</td>
+            <td class="px-4 py-3 font-semibold text-white">${log.nama}</td>
+            <td class="px-4 py-3 text-center font-bold ${isMasuk ? 'text-emerald-400' : 'text-amber-400'}">
+              ${isMasuk ? '+' : ''}${log.jumlah}
+            </td>
+            <td class="px-4 py-3 text-slate-300 font-medium">${log.satuan}</td>
+            <td class="px-4 py-3 text-slate-300">${log.petugas}</td>
+            <td class="px-4 py-3 text-amber-300 font-semibold">${log.keterangan || '-'}</td>
+            <td class="px-4 py-3 text-center">
+              <button onclick="hapusLogTransaksi('${log.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition">
                 <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
               </button>
             </td>
@@ -640,7 +584,6 @@
       if (!select) return;
 
       const currentSelectedValue = select.value;
-
       select.innerHTML = '';
       masterBarang.forEach(item => {
         select.innerHTML += `<option value="${item.id}">${item.nama} (Sisa: ${item.jumlah} ${item.satuan})</option>`;
@@ -665,14 +608,12 @@
         nama, 
         jumlah, 
         satuan, 
-        keterangan, 
+        keterangan,
+        petugas: "Admin",
         isEditMode: isEditMode 
       };
 
-      fetch(GAS_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
+      fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
       .then(res => res.json())
       .then(() => {
         fetchDataFromGAS();
@@ -685,7 +626,7 @@
       const item = masterBarang.find(b => String(b.id) === String(id));
       if (!item) return;
 
-      const newJumlah = prompt(`Ubah total sisa stok secara langsung untuk "${item.nama}":`, item.jumlah);
+      const newJumlah = prompt(`Set jumlah sisa stok baru untuk "${item.nama}":`, item.jumlah);
       if (newJumlah !== null && !isNaN(newJumlah) && newJumlah !== '') {
         const payload = {
           action: "SAVE_MASTER",
@@ -694,6 +635,7 @@
           jumlah: parseFloat(newJumlah),
           satuan: item.satuan,
           keterangan: item.keterangan,
+          petugas: "Admin",
           isEditMode: true
         };
 
@@ -713,7 +655,7 @@
       document.getElementById('inputSatuan').value = item.satuan;
       document.getElementById('inputKeterangan').value = item.keterangan || '';
 
-      document.getElementById('formTitle').textContent = "Edit Data Stok Barang (Timpa Nilai)";
+      document.getElementById('formTitle').textContent = "Edit Data Master Stok";
       document.getElementById('btnSubmitForm').textContent = "SIMPAN PERUBAHAN";
       document.getElementById('btnCancelEdit').classList.remove('hidden');
 
@@ -724,7 +666,7 @@
       const item = masterBarang.find(b => String(b.id) === String(id));
       if (!item) return;
 
-      if (confirm(`Hapus "${item.nama}" dari daftar stok?`)) {
+      if (confirm(`Hapus "${item.nama}" dari master stok?`)) {
         fetch(GAS_URL, {
           method: "POST",
           body: JSON.stringify({ action: "DELETE_MASTER", id })
@@ -737,11 +679,11 @@
       document.getElementById('editId').value = "";
       document.getElementById('inputNamaBarang').value = "";
       document.getElementById('inputJumlah').value = "";
-      document.getElementById('inputSatuan').value = "";
+      document.getElementById('inputSatuan').value = "kg";
       document.getElementById('inputKeterangan').value = "";
 
-      document.getElementById('formTitle').textContent = "Tambah / Update Stok Barang";
-      document.getElementById('btnSubmitForm').textContent = "SIMPAN STOK BARANG";
+      document.getElementById('formTitle').textContent = "Tambah / Update Master Stok";
+      document.getElementById('btnSubmitForm').textContent = "SIMPAN BARANG";
       document.getElementById('btnCancelEdit').classList.add('hidden');
     }
 
@@ -769,10 +711,7 @@
         keterangan: keterangan
       };
 
-      fetch(GAS_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
+      fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
       .then(res => res.json())
       .then(() => {
         alert('✅ Pemakaian bahan berhasil dicatat!');
@@ -783,49 +722,26 @@
     }
 
     function hapusLogTransaksi(id) {
-      if (!confirm("Apakah Anda yakin ingin menghapus baris riwayat transaksi ini?")) return;
+      if (!confirm("Hapus baris riwayat transaksi ini?")) return;
 
       fetch(GAS_URL, {
         method: "POST",
         body: JSON.stringify({ action: "DELETE_LOG", id: id })
-      })
-      .then(res => res.json())
-      .then(result => {
-        if (result.status === "SUCCESS") {
-          fetchDataFromGAS();
-        } else {
-          alert("Gagal menghapus log: " + result.message);
-        }
-      });
+      }).then(() => fetchDataFromGAS());
     }
 
     function resetSemuaLog() {
-      const confirm1 = confirm("⚠️ PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SELURUH RIWAYAT LOG TRANSAKSI?");
-      if (!confirm1) return;
-
-      const confirm2 = prompt("Ketik 'RESET' untuk mengonfirmasi penghapusan seluruh data log:");
-      if (confirm2 !== "RESET") {
-        alert("Reset log dibatalkan.");
-        return;
+      if (confirm("Hapus SELURUH LOG TRANSAKSI?")) {
+        fetch(GAS_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "RESET_LOG" })
+        }).then(() => fetchDataFromGAS());
       }
-
-      fetch(GAS_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "RESET_LOG" })
-      })
-      .then(res => res.json())
-      .then(result => {
-        if (result.status === "SUCCESS") {
-          alert("✅ Semua riwayat log transaksi berhasil dibersihkan!");
-          fetchDataFromGAS();
-        }
-      });
     }
 
-    // EXPORT TO EXCEL DUA VERSI (STOK & PEMAKAIAN DENGAN FILTER TANGGAL)
     function exportToExcelFormat(type) {
       const tanggalHariIni = new Date().toISOString().slice(0, 10);
-      let fileName = `Laporan_Stok_DafiCatering_${tanggalHariIni}.xls`;
+      let fileName = `Laporan_Stok_${tanggalHariIni}.xls`;
       let title = "LAPORAN SISA STOK BARANG & BAHAN DAFI CATERING";
       let tableHeaders = "";
       let tableRows = "";
@@ -833,11 +749,11 @@
       if (type === 'stok') {
         tableHeaders = `
           <tr>
-            <th style="width: 50px;">No</th>
-            <th style="width: 250px;">Nama Barang / Bahan</th>
-            <th style="width: 100px;">Sisa Stok</th>
-            <th style="width: 100px;">Satuan</th>
-            <th style="width: 200px;">Keterangan</th>
+            <th>No</th>
+            <th>Nama Barang</th>
+            <th>Sisa Stok</th>
+            <th>Satuan</th>
+            <th>Keterangan / Supplier</th>
           </tr>
         `;
         masterBarang.forEach((item, index) => {
@@ -845,7 +761,7 @@
             <tr>
               <td style="text-align: center;">${index + 1}</td>
               <td>${item.nama}</td>
-              <td style="text-align: right; font-weight: bold; color: #b45309;">${item.jumlah}</td>
+              <td style="text-align: right; font-weight: bold;">${item.jumlah}</td>
               <td style="text-align: center;">${item.satuan}</td>
               <td>${item.keterangan || '-'}</td>
             </tr>
@@ -853,36 +769,28 @@
         });
       } else if (type === 'pemakaian') {
         const dataPemakaianFiltered = getFilteredPemakaian();
-        const start = document.getElementById('filterStartDate')?.value;
-        const end = document.getElementById('filterEndDate')?.value;
-
-        let dateInfo = tanggalHariIni;
-        if (start || end) {
-          dateInfo = `${start || 'Awal'} s/d ${end || 'Hari ini'}`;
-        }
-
-        fileName = `Laporan_Pemakaian_Bahan_${dateInfo}.xls`;
-        title = `LAPORAN PEMAKAIAN BAHAN DAFI CATERING (${dateInfo})`;
+        fileName = `Laporan_Pemakaian_Bahan_${tanggalHariIni}.xls`;
+        title = `LAPORAN PEMAKAIAN BAHAN DAFI CATERING`;
         
         tableHeaders = `
           <tr>
-            <th style="width: 100px;">Tanggal</th>
-            <th style="width: 80px;">Jam</th>
-            <th style="width: 220px;">Nama Barang / Bahan</th>
-            <th style="width: 110px;">Jumlah Dipakai</th>
-            <th style="width: 80px;">Satuan</th>
-            <th style="width: 120px;">Petugas</th>
-            <th style="width: 200px;">Perusahaan / Klien</th>
+            <th>Tanggal Hari</th>
+            <th>Jam</th>
+            <th>Nama Barang</th>
+            <th>Jumlah Dipakai</th>
+            <th>Satuan</th>
+            <th>Petugas</th>
+            <th>Perusahaan / Klien</th>
           </tr>
         `;
         
         dataPemakaianFiltered.forEach((item) => {
           tableRows += `
             <tr>
-              <td style="text-align: center;">${item.tanggal}</td>
+              <td>${item.tanggal}</td>
               <td style="text-align: center;">${item.jam}</td>
               <td>${item.nama}</td>
-              <td style="text-align: right; font-weight: bold; color: #b45309;">${item.jumlah}</td>
+              <td style="text-align: right; font-weight: bold;">${item.jumlah}</td>
               <td style="text-align: center;">${item.satuan}</td>
               <td>${item.petugas}</td>
               <td>${item.keterangan || '-'}</td>
@@ -892,55 +800,20 @@
       }
 
       const excelTemplate = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
         <head>
           <meta charset="utf-8" />
-          <!--[if gte mso 9]>
-          <xml>
-            <x:ExcelWorkbook>
-              <x:ExcelWorksheets>
-                <x:ExcelWorksheet>
-                  <x:Name>Laporan</x:Name>
-                  <x:WorksheetOptions>
-                    <x:DisplayGridlines/>
-                  </x:WorksheetOptions>
-                </x:ExcelWorksheet>
-              </x:ExcelWorksheets>
-            </x:ExcelWorkbook>
-          </xml>
-          <![endif]-->
           <style>
-            body { font-family: 'Calibri', 'Arial', sans-serif; }
-            .title { font-size: 16pt; font-weight: bold; text-align: center; margin-bottom: 5px; }
-            .subtitle { font-size: 10pt; color: #555555; text-align: center; margin-bottom: 15px; }
-            table { border-collapse: collapse; width: 100%; }
-            th { 
-              background-color: #f59e0b; 
-              color: #000000; 
-              font-weight: bold; 
-              text-align: center; 
-              border: 1px solid #d97706; 
-              padding: 8px;
-            }
-            td { 
-              border: 1px solid #cccccc; 
-              padding: 6px; 
-              vertical-align: middle;
-            }
+            body { font-family: 'Calibri', sans-serif; }
+            .title { font-size: 14pt; font-weight: bold; text-align: center; }
+            table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+            th { background-color: #f59e0b; color: #000; font-weight: bold; border: 1px solid #d97706; padding: 6px; }
+            td { border: 1px solid #ccc; padding: 6px; }
           </style>
         </head>
         <body>
           <div class="title">${title}</div>
-          <div class="subtitle">Tanggal Cetak: ${tanggalHariIni}</div>
-          
-          <table>
-            <thead>
-              ${tableHeaders}
-            </thead>
-            <tbody>
-              ${tableRows}
-            </tbody>
-          </table>
+          <table><thead>${tableHeaders}</thead><tbody>${tableRows}</tbody></table>
         </body>
         </html>
       `;

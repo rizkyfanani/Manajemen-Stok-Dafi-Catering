@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id" class="h-full bg-slate-950">
 <head>
@@ -69,7 +68,7 @@
   <!-- ================================================================= -->
   <div id="adminLayout" class="hidden min-h-full flex flex-col md:flex-row">
     
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR NAVIGATION -->
     <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-40 w-64 border-r border-slate-800/80 bg-slate-900 flex flex-col justify-between p-4 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out">
       <div class="space-y-6">
         <div class="flex items-center justify-between px-2">
@@ -88,16 +87,19 @@
           </button>
         </div>
 
-        <!-- MENU -->
+        <!-- MENU NAVIGASI KIRI -->
         <nav class="space-y-1.5 text-xs font-medium">
           <button onclick="switchAdminTab('stok')" id="menuStok" class="w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold">
             <i data-lucide="package" class="h-4 w-4"></i> Data Stok
+          </button>
+          <button onclick="switchAdminTab('pemakaian')" id="menuPemakaian" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+            <i data-lucide="clipboard-list" class="h-4 w-4"></i> Data Pemakaian
           </button>
           <button onclick="switchAdminTab('inputAdmin')" id="menuInputAdmin" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
             <i data-lucide="plus-circle" class="h-4 w-4"></i> Tambah / Kelola Stok
           </button>
           <button onclick="switchAdminTab('laporan')" id="menuLaporan" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-            <i data-lucide="file-text" class="h-4 w-4"></i> Log Pemakaian
+            <i data-lucide="history" class="h-4 w-4"></i> Log Transaksi
           </button>
         </nav>
       </div>
@@ -128,8 +130,8 @@
             <i data-lucide="menu" class="h-5 w-5"></i>
           </button>
           <div>
-            <h2 class="text-sm sm:text-lg font-bold text-white leading-tight">Pengelolaan Stok</h2>
-            <p class="text-[10px] sm:text-xs text-slate-400 hidden sm:block">Kelola bahan & barang Dafi Catering.</p>
+            <h2 id="pageTitle" class="text-sm sm:text-lg font-bold text-white leading-tight">Pengelolaan Stok</h2>
+            <p id="pageSubTitle" class="text-[10px] sm:text-xs text-slate-400 hidden sm:block">Kelola bahan & barang Dafi Catering.</p>
           </div>
         </div>
 
@@ -146,38 +148,93 @@
       <!-- TAB 1: DATA STOK BARANG -->
       <main id="tabStok" class="p-4 sm:p-8 space-y-4 sm:space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <h3 class="text-sm sm:text-base font-bold text-white">Daftar Stok Bahan & Barang</h3>
-          <button onclick="exportToExcelFormat()" class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/20 transition">
-            <i data-lucide="file-spreadsheet" class="h-4 w-4"></i> Export Laporan (Excel)
+          <h3 class="text-sm sm:text-base font-bold text-white">Daftar Sisa Stok Bahan & Barang</h3>
+          <button onclick="exportToExcelFormat('stok')" class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-600/20 transition">
+            <i data-lucide="file-spreadsheet" class="h-4 w-4"></i> Export Stok (Excel)
           </button>
         </div>
 
-        <!-- TABEL DESKTOP -->
         <div class="hidden sm:block rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
           <table class="w-full text-left text-xs text-slate-300">
             <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
               <tr>
                 <th class="px-4 py-3.5 text-center w-12">No</th>
                 <th class="px-6 py-3.5">Nama Barang / Bahan</th>
-                <th class="px-6 py-3.5 text-center">Jumlah</th>
+                <th class="px-6 py-3.5 text-center">Sisa Stok</th>
                 <th class="px-6 py-3.5">Satuan</th>
                 <th class="px-6 py-3.5">Keterangan</th>
                 <th class="px-6 py-3.5 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody id="tableMasterBody" class="divide-y divide-slate-800/60">
-              <!-- Render via JS -->
+              <!-- Render JS -->
             </tbody>
           </table>
         </div>
 
-        <!-- KARTU MOBILE -->
         <div id="mobileMasterList" class="sm:hidden space-y-3">
-          <!-- Render via JS -->
+          <!-- Render JS -->
         </div>
       </main>
 
-      <!-- TAB 2: FORM STOK ADMIN -->
+      <!-- TAB 2: DATA PEMAKAIAN (DILENGKAPI FILTER TANGGAL) -->
+      <main id="tabPemakaian" class="hidden p-4 sm:p-8 space-y-4 sm:space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-white">Laporan Pemakaian Bahan (Petugas Dapur)</h3>
+            <p class="text-xs text-slate-400">Daftar penggunaan bahan untuk pelayanan catering/perusahaan.</p>
+          </div>
+          <button onclick="exportToExcelFormat('pemakaian')" class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 text-xs shadow-lg shadow-amber-500/20 transition">
+            <i data-lucide="file-spreadsheet" class="h-4 w-4"></i> Export Data Pemakaian (Excel)
+          </button>
+        </div>
+
+        <!-- FITUR FILTER RENTANG TANGGAL -->
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 space-y-3 sm:space-y-0 sm:flex sm:items-center sm:gap-4">
+          <div class="flex-1 flex items-center gap-2">
+            <i data-lucide="filter" class="h-4 w-4 text-amber-400 hidden sm:block"></i>
+            <span class="text-xs font-semibold text-slate-300 whitespace-nowrap">Filter Tanggal:</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:flex items-center gap-2">
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-1 sm:hidden">Mulai Tanggal</label>
+              <input type="date" id="filterStartDate" onchange="renderTables()" class="w-full sm:w-auto rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
+            </div>
+            <span class="hidden sm:inline text-slate-500 text-xs">s/d</span>
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-1 sm:hidden">Sampai Tanggal</label>
+              <input type="date" id="filterEndDate" onchange="renderTables()" class="w-full sm:w-auto rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
+            </div>
+          </div>
+
+          <button onclick="resetFilterTanggal()" class="w-full sm:w-auto px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-medium transition flex items-center justify-center gap-1.5">
+            <i data-lucide="rotate-ccw" class="h-3.5 w-3.5"></i> Reset Filter
+          </button>
+        </div>
+
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300 min-w-[700px]">
+            <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
+              <tr>
+                <th class="px-4 py-3">Tanggal</th>
+                <th class="px-4 py-3">Jam</th>
+                <th class="px-4 py-3">Nama Bahan / Barang</th>
+                <th class="px-4 py-3 text-center">Jumlah Dipakai</th>
+                <th class="px-4 py-3">Satuan</th>
+                <th class="px-4 py-3">Petugas</th>
+                <th class="px-4 py-3">Perusahaan / Klien</th>
+                <th class="px-4 py-3 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tablePemakaianBody" class="divide-y divide-slate-800/60">
+              <!-- Render JS -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+
+      <!-- TAB 3: FORM STOK ADMIN -->
       <main id="tabInputAdmin" class="hidden p-4 sm:p-8 max-w-xl space-y-4">
         <h3 id="formTitle" class="text-sm sm:text-base font-bold text-white">Tambah / Update Stok Barang</h3>
         <p class="text-xs text-amber-400 bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
@@ -194,7 +251,7 @@
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Stok Baru / Tambahan <span class="text-amber-500">*</span></label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Tambahan <span class="text-amber-500">*</span></label>
               <input type="number" id="inputJumlah" step="any" min="0" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
             </div>
 
@@ -218,10 +275,10 @@
         </form>
       </main>
 
-      <!-- TAB 3: LOG PEMAKAIAN -->
+      <!-- TAB 4: LOG TRANSAKSI -->
       <main id="tabLaporan" class="hidden p-4 sm:p-8 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <h3 class="text-sm sm:text-base font-bold text-white">Log Riwayat Pemakaian Bahan</h3>
+          <h3 class="text-sm sm:text-base font-bold text-white">Semua Log Riwayat Aktivitas</h3>
           <button onclick="resetSemuaLog()" class="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/30 px-3.5 py-2 text-xs font-semibold transition">
             <i data-lucide="trash" class="h-4 w-4"></i> Reset Semua Log
           </button>
@@ -234,7 +291,7 @@
                 <th class="px-4 py-3">Tanggal</th>
                 <th class="px-4 py-3">Jam</th>
                 <th class="px-4 py-3">Nama Barang / Bahan</th>
-                <th class="px-4 py-3 text-center">Jumlah Dipakai</th>
+                <th class="px-4 py-3 text-center">Jumlah</th>
                 <th class="px-4 py-3">Satuan</th>
                 <th class="px-4 py-3">Petugas</th>
                 <th class="px-4 py-3">Perusahaan / Ket</th>
@@ -242,7 +299,7 @@
               </tr>
             </thead>
             <tbody id="tableLogBody" class="divide-y divide-slate-800/60">
-              <!-- Render via JS -->
+              <!-- Render JS -->
             </tbody>
           </table>
         </div>
@@ -288,7 +345,6 @@
         <input type="number" id="petugasJumlah" step="any" min="0.1" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-center text-2xl font-bold text-amber-400 focus:border-amber-500 focus:outline-none">
       </div>
 
-      <!-- FITUR BARU 1: INPUT PERUSAHAAN / KETERANGAN -->
       <div>
         <label class="block text-xs font-semibold text-slate-300 mb-1">Perusahaan / Klien Dilayani <span class="text-slate-500">(Opsional)</span></label>
         <input type="text" id="petugasKeterangan" placeholder="Contoh: PT Sampoerna / Catering Wedding" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500 focus:outline-none">
@@ -307,8 +363,8 @@
   <!-- 4. JAVASCRIPT LOGIC & REAL-TIME SYNC                              -->
   <!-- ================================================================= -->
   <script>
-    // ⚠️ PASTI SKRIP INI TERISI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbztlrzPUYcREEcwVnl1PrnRm6-I0HLtELwPXus11Oeegs07ComO2GuZLrLZXhWFRSTH/exec";
+    // ⚠️ PASTIKAN SCRIPT ID GOOGLE APPS SCRIPT SUDAH SAMA
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyvAjqA6WjZBetSVD6d7y-C-fD5D5GX6ibo-VHrOLyVqy33-DJj9JbGvc5aS96eIZ-D/exec";
 
     let masterBarang = [];
     let logPemakaian = [];
@@ -375,7 +431,6 @@
       document.getElementById('loginScreen').classList.remove('hidden');
     }
 
-    // REALTIME SYNC (Tiap 4 Detik)
     function startRealtimeSync() {
       if (!syncInterval) {
         syncInterval = setInterval(() => {
@@ -408,39 +463,73 @@
     }
 
     function switchAdminTab(tab) {
-      const tabs = ['tabStok', 'tabInputAdmin', 'tabLaporan'];
-      const menus = ['menuStok', 'menuInputAdmin', 'menuLaporan'];
+      const tabs = ['tabStok', 'tabPemakaian', 'tabInputAdmin', 'tabLaporan'];
+      const menus = ['menuStok', 'menuPemakaian', 'menuInputAdmin', 'menuLaporan'];
 
       tabs.forEach(t => document.getElementById(t).classList.add('hidden'));
       menus.forEach(m => {
         document.getElementById(m).className = "w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition";
       });
 
+      const pageTitle = document.getElementById('pageTitle');
+      const pageSubTitle = document.getElementById('pageSubTitle');
+
       if (tab === 'stok') {
         document.getElementById('tabStok').classList.remove('hidden');
         document.getElementById('menuStok').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+        pageTitle.textContent = "Pengelolaan Stok";
+        pageSubTitle.textContent = "Daftar sisa stok bahan & barang Dafi Catering.";
+      } else if (tab === 'pemakaian') {
+        document.getElementById('tabPemakaian').classList.remove('hidden');
+        document.getElementById('menuPemakaian').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+        pageTitle.textContent = "Data Pemakaian Bahan";
+        pageSubTitle.textContent = "Riwayat pemakaian barang oleh petugas dapur.";
       } else if (tab === 'inputAdmin') {
         document.getElementById('tabInputAdmin').classList.remove('hidden');
         document.getElementById('menuInputAdmin').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+        pageTitle.textContent = "Tambah / Update Stok";
+        pageSubTitle.textContent = "Form penambahan atau update master stok.";
       } else if (tab === 'laporan') {
         document.getElementById('tabLaporan').classList.remove('hidden');
         document.getElementById('menuLaporan').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+        pageTitle.textContent = "Log Riwayat Transaksi";
+        pageSubTitle.textContent = "Semua riwayat masuk dan keluar bahan.";
       }
 
       if (window.innerWidth < 768) toggleSidebar();
     }
 
+    function resetFilterTanggal() {
+      document.getElementById('filterStartDate').value = '';
+      document.getElementById('filterEndDate').value = '';
+      renderTables();
+    }
+
+    function getFilteredPemakaian() {
+      const start = document.getElementById('filterStartDate')?.value;
+      const end = document.getElementById('filterEndDate')?.value;
+
+      return logPemakaian.filter(log => {
+        if (!log.tanggal || log.tanggal === '-') return true;
+        
+        // Format tanggal log (yyyy-mm-dd)
+        let tglLog = log.tanggal;
+        if (start && tglLog < start) return false;
+        if (end && tglLog > end) return false;
+
+        return true;
+      });
+    }
+
     function renderTables() {
+      // 1. Render Tabel Master Stok
       const tbodyMaster = document.getElementById('tableMasterBody');
       const mobileList = document.getElementById('mobileMasterList');
-      
       tbodyMaster.innerHTML = '';
       mobileList.innerHTML = '';
 
       masterBarang.forEach((item, index) => {
         const no = index + 1;
-
-        // Desktop Row
         tbodyMaster.innerHTML += `
           <tr class="transition hover:bg-slate-800/30">
             <td class="px-4 py-3.5 text-center font-mono text-slate-400">${no}</td>
@@ -464,7 +553,6 @@
           </tr>
         `;
 
-        // Mobile Card
         mobileList.innerHTML += `
           <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 space-y-3">
             <div class="flex justify-between items-start">
@@ -493,18 +581,47 @@
         `;
       });
 
-      // Log Table (DENGAN TOMBOL HAPUS LOG PER BARIS)
+      // 2. Render Tabel Data Pemakaian (Dengan Filter)
+      const tbodyPemakaian = document.getElementById('tablePemakaianBody');
       const tbodyLog = document.getElementById('tableLogBody');
+      tbodyPemakaian.innerHTML = '';
       tbodyLog.innerHTML = '';
+
+      const filteredPemakaian = getFilteredPemakaian();
+
+      if (filteredPemakaian.length === 0) {
+        tbodyPemakaian.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-500 italic">Tidak ada data pemakaian pada rentang tanggal ini.</td></tr>`;
+      } else {
+        filteredPemakaian.forEach(log => {
+          tbodyPemakaian.innerHTML += `
+            <tr class="transition hover:bg-slate-800/30">
+              <td class="px-4 py-3 text-slate-300 font-medium">${log.tanggal}</td>
+              <td class="px-4 py-3 font-mono text-slate-400">${log.jam}</td>
+              <td class="px-4 py-3 font-semibold text-white">${log.nama}</td>
+              <td class="px-4 py-3 text-center font-bold text-amber-400">${log.jumlah || 0}</td>
+              <td class="px-4 py-3 text-slate-300">${log.satuan}</td>
+              <td class="px-4 py-3 text-slate-300">${log.petugas}</td>
+              <td class="px-4 py-3 text-amber-300 font-medium">${log.keterangan || '-'}</td>
+              <td class="px-4 py-3 text-center">
+                <button onclick="hapusLogTransaksi('${log.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition" title="Hapus Log Ini">
+                  <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+
+      // 3. Render Log Semua Transaksi
       logPemakaian.forEach(log => {
         tbodyLog.innerHTML += `
-          <tr>
-            <td class="px-4 py-3 text-slate-400">${log.tanggal}</td>
+          <tr class="transition hover:bg-slate-800/30">
+            <td class="px-4 py-3 text-slate-300 font-medium">${log.tanggal}</td>
             <td class="px-4 py-3 font-mono text-slate-400">${log.jam}</td>
-            <td class="px-4 py-3 font-medium text-white">${log.nama}</td>
-            <td class="px-4 py-3 text-center font-bold text-amber-400">${log.jumlah}</td>
-            <td class="px-4 py-3 text-slate-400">${log.satuan}</td>
-            <td class="px-4 py-3 text-slate-400">${log.petugas}</td>
+            <td class="px-4 py-3 font-semibold text-white">${log.nama}</td>
+            <td class="px-4 py-3 text-center font-bold text-amber-400">${log.jumlah || 0}</td>
+            <td class="px-4 py-3 text-slate-300">${log.satuan}</td>
+            <td class="px-4 py-3 text-slate-300">${log.petugas}</td>
             <td class="px-4 py-3 text-amber-300 font-medium">${log.keterangan || '-'}</td>
             <td class="px-4 py-3 text-center">
               <button onclick="hapusLogTransaksi('${log.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-lg transition" title="Hapus Log Ini">
@@ -518,7 +635,6 @@
       lucide.createIcons();
     }
 
-    // POPULATE DROPDOWN PETUGAS (PILIHAN TERKUNCI SAFE)
     function populateSelectPetugas() {
       const select = document.getElementById('petugasSelectBarang');
       if (!select) return;
@@ -535,7 +651,6 @@
       }
     }
 
-    // SIMPAN / AKUMULASI STOK ADMIN
     function handleSaveStock(e) {
       e.preventDefault();
       const id = document.getElementById('editId').value || Date.now();
@@ -579,7 +694,7 @@
           jumlah: parseFloat(newJumlah),
           satuan: item.satuan,
           keterangan: item.keterangan,
-          isEditMode: true // Langsung timpa angka sisa stok
+          isEditMode: true
         };
 
         fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
@@ -630,7 +745,6 @@
       document.getElementById('btnCancelEdit').classList.add('hidden');
     }
 
-    // FITUR BARU 1: INPUT PEMAKAIAN PETUGAS + KETERANGAN PERUSAHAAN
     function handlePetugasPemakaian(e) {
       e.preventDefault();
       const id = document.getElementById('petugasSelectBarang').value;
@@ -668,7 +782,6 @@
       });
     }
 
-    // FITUR BARU 3: HAPUS 1 BARIS LOG TRANSAKSI
     function hapusLogTransaksi(id) {
       if (!confirm("Apakah Anda yakin ingin menghapus baris riwayat transaksi ini?")) return;
 
@@ -686,7 +799,6 @@
       });
     }
 
-    // FITUR BARU 3: RESET SEMUA LOG TRANSAKSI
     function resetSemuaLog() {
       const confirm1 = confirm("⚠️ PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SELURUH RIWAYAT LOG TRANSAKSI?");
       if (!confirm1) return;
@@ -710,22 +822,74 @@
       });
     }
 
-    // EXPORT LAPORAN EXCEL RAPI
-    function exportToExcelFormat() {
+    // EXPORT TO EXCEL DUA VERSI (STOK & PEMAKAIAN DENGAN FILTER TANGGAL)
+    function exportToExcelFormat(type) {
       const tanggalHariIni = new Date().toISOString().slice(0, 10);
-      
+      let fileName = `Laporan_Stok_DafiCatering_${tanggalHariIni}.xls`;
+      let title = "LAPORAN SISA STOK BARANG & BAHAN DAFI CATERING";
+      let tableHeaders = "";
       let tableRows = "";
-      masterBarang.forEach((item, index) => {
-        const no = index + 1;
-        tableRows += `
+
+      if (type === 'stok') {
+        tableHeaders = `
           <tr>
-            <td style="text-align: center;">${no}</td>
-            <td>${item.nama}</td>
-            <td style="text-align: right; font-weight: bold; color: #b45309;">${item.jumlah}</td>
-            <td style="text-align: center;">${item.satuan}</td>
+            <th style="width: 50px;">No</th>
+            <th style="width: 250px;">Nama Barang / Bahan</th>
+            <th style="width: 100px;">Sisa Stok</th>
+            <th style="width: 100px;">Satuan</th>
+            <th style="width: 200px;">Keterangan</th>
           </tr>
         `;
-      });
+        masterBarang.forEach((item, index) => {
+          tableRows += `
+            <tr>
+              <td style="text-align: center;">${index + 1}</td>
+              <td>${item.nama}</td>
+              <td style="text-align: right; font-weight: bold; color: #b45309;">${item.jumlah}</td>
+              <td style="text-align: center;">${item.satuan}</td>
+              <td>${item.keterangan || '-'}</td>
+            </tr>
+          `;
+        });
+      } else if (type === 'pemakaian') {
+        const dataPemakaianFiltered = getFilteredPemakaian();
+        const start = document.getElementById('filterStartDate')?.value;
+        const end = document.getElementById('filterEndDate')?.value;
+
+        let dateInfo = tanggalHariIni;
+        if (start || end) {
+          dateInfo = `${start || 'Awal'} s/d ${end || 'Hari ini'}`;
+        }
+
+        fileName = `Laporan_Pemakaian_Bahan_${dateInfo}.xls`;
+        title = `LAPORAN PEMAKAIAN BAHAN DAFI CATERING (${dateInfo})`;
+        
+        tableHeaders = `
+          <tr>
+            <th style="width: 100px;">Tanggal</th>
+            <th style="width: 80px;">Jam</th>
+            <th style="width: 220px;">Nama Barang / Bahan</th>
+            <th style="width: 110px;">Jumlah Dipakai</th>
+            <th style="width: 80px;">Satuan</th>
+            <th style="width: 120px;">Petugas</th>
+            <th style="width: 200px;">Perusahaan / Klien</th>
+          </tr>
+        `;
+        
+        dataPemakaianFiltered.forEach((item) => {
+          tableRows += `
+            <tr>
+              <td style="text-align: center;">${item.tanggal}</td>
+              <td style="text-align: center;">${item.jam}</td>
+              <td>${item.nama}</td>
+              <td style="text-align: right; font-weight: bold; color: #b45309;">${item.jumlah}</td>
+              <td style="text-align: center;">${item.satuan}</td>
+              <td>${item.petugas}</td>
+              <td>${item.keterangan || '-'}</td>
+            </tr>
+          `;
+        });
+      }
 
       const excelTemplate = `
         <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
@@ -736,7 +900,7 @@
             <x:ExcelWorkbook>
               <x:ExcelWorksheets>
                 <x:ExcelWorksheet>
-                  <x:Name>Laporan Stok</x:Name>
+                  <x:Name>Laporan</x:Name>
                   <x:WorksheetOptions>
                     <x:DisplayGridlines/>
                   </x:WorksheetOptions>
@@ -766,17 +930,12 @@
           </style>
         </head>
         <body>
-          <div class="title">LAPORAN STOK BARANG & BAHAN DAFI CATERING</div>
+          <div class="title">${title}</div>
           <div class="subtitle">Tanggal Cetak: ${tanggalHariIni}</div>
           
           <table>
             <thead>
-              <tr>
-                <th style="width: 50px;">No</th>
-                <th style="width: 250px;">Nama Barang / Bahan</th>
-                <th style="width: 100px;">Jumlah</th>
-                <th style="width: 100px;">Satuan</th>
-              </tr>
+              ${tableHeaders}
             </thead>
             <tbody>
               ${tableRows}
@@ -790,7 +949,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.body.appendChild(document.createElement("a"));
       link.href = url;
-      link.download = `Laporan_Stok_DafiCatering_${tanggalHariIni}.xls`;
+      link.download = fileName;
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);

@@ -1,381 +1,598 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full bg-slate-950">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Manajemen Stok & Pemakaian - Dafi Catering</title>
-
-  <!-- Tailwind CSS -->
+  <title>Catering Stock & Usage System</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- Tom Select CSS (Fitur Searchable Dropdown) -->
-  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-
-  <style>
-    /* Custom Styling Tom Select untuk Dark Mode */
-    .ts-control {
-      background-color: #374151 !important;
-      border-color: #4b5563 !important;
-      color: #ffffff !important;
-      border-radius: 0.5rem !important;
-      padding: 0.625rem 0.75rem !important;
-    }
-    .ts-control input {
-      color: #ffffff !important;
-    }
-    .ts-dropdown {
-      background-color: #1f2937 !important;
-      border-color: #4b5563 !important;
-      color: #ffffff !important;
-    }
-    .ts-dropdown .option {
-      color: #e5e7eb !important;
-    }
-    .ts-dropdown .option.active, .ts-dropdown .option:hover {
-      background-color: #374151 !important;
-      color: #ffffff !important;
-    }
-  </style>
+  <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
+<body class="h-full text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
 
-  <div class="flex flex-col md:flex-row min-h-screen">
-    
-    <!-- SIDEBAR -->
-    <aside class="w-full md:w-64 bg-gray-800 p-6 flex flex-col justify-between border-b md:border-b-0 md:border-r border-gray-700">
-      <div>
-        <div class="flex items-center space-x-3 mb-8">
-          <div class="p-2 bg-indigo-600 rounded-lg">
-            <i data-lucide="chef-hat" class="w-6 h-6 text-white"></i>
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="flex min-h-full items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md space-y-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-8 shadow-2xl backdrop-blur-xl">
+      <div class="text-center">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20 shadow-lg shadow-amber-500/10">
+          <i data-lucide="utensils" class="h-7 w-7"></i>
+        </div>
+        <h2 class="mt-4 text-2xl font-extrabold text-white">Catering Control</h2>
+        <p class="mt-1 text-xs text-slate-400">Sistem Manajemen Stok & Pemakaian Bahan</p>
+      </div>
+      <form class="space-y-4" onsubmit="handleLogin(event)">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Username</label>
+          <input type="text" id="inputUsername" placeholder="Username" required class="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">PIN / Password</label>
+          <input type="password" id="inputPin" placeholder="••••" required class="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-center text-lg font-bold tracking-widest text-white focus:border-amber-500 focus:outline-none">
+        </div>
+        <button type="submit" id="btnLoginSubmit" class="w-full rounded-xl bg-amber-500 py-3 text-xs font-bold text-slate-950 shadow-lg hover:bg-amber-400 transition active:scale-95">MASUK KE SISTEM</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="adminLayout" class="hidden min-h-full flex">
+    <aside class="w-64 border-r border-slate-800/80 bg-slate-900/60 backdrop-blur-xl flex flex-col justify-between p-4">
+      <div class="space-y-6">
+        <div class="flex items-center gap-3 px-2">
+          <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-extrabold">
+            <i data-lucide="chef-hat" class="h-5 w-5"></i>
           </div>
           <div>
-            <h1 class="font-bold text-lg leading-tight">Dafi Catering</h1>
-            <p class="text-xs text-gray-400">Manajemen Stok</p>
+            <h1 class="font-bold text-sm text-white">CateringHub</h1>
+            <span class="text-[10px] text-amber-400 font-medium">Panel Administrator</span>
           </div>
         </div>
 
-        <nav class="space-y-2">
-          <button onclick="switchTab('stok')" id="nav-stok" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition-all">
-            <i data-lucide="boxes" class="w-5 h-5"></i>
-            <span>Stok Barang</span>
+        <nav class="space-y-1.5 text-xs font-medium">
+          <button onclick="switchAdminTab('stok')" id="menuStok" class="w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold">
+            <i data-lucide="package" class="h-4 w-4"></i> Master Stok Barang
           </button>
-          
-          <button onclick="switchTab('pemakaian')" id="nav-pemakaian" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-gray-200 font-medium transition-all">
-            <i data-lucide="clipboard-list" class="w-5 h-5"></i>
-            <span>Data Pemakaian</span>
+          <button onclick="switchAdminTab('inputStok')" id="menuInputStok" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+            <i data-lucide="plus-circle" class="h-4 w-4"></i> Input Data Stok
           </button>
-
-          <button onclick="switchTab('input')" id="nav-input" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-gray-200 font-medium transition-all">
-            <i data-lucide="minus-circle" class="w-5 h-5"></i>
-            <span>Catat Pemakaian</span>
+          <button onclick="switchAdminTab('laporan')" id="menuLaporan" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+            <i data-lucide="file-text" class="h-4 w-4"></i> Data Pemakaian
           </button>
         </nav>
       </div>
 
-      <div class="pt-6 border-t border-gray-700">
-        <button onclick="fetchData()" class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-700 text-gray-300 rounded-lg text-sm transition-all">
-          <i data-lucide="refresh-cw" class="w-4 h-4" id="refresh-icon"></i>
-          <span>Refresh Data</span>
-        </button>
+      <div class="border-t border-slate-800 pt-4 px-2 flex items-center justify-between">
+        <div class="text-xs">
+          <p class="font-bold text-white" id="adminNameDisplay">Admin</p>
+          <p class="text-[10px] text-emerald-400 font-semibold">Online</p>
+        </div>
+        <button onclick="logout()" class="p-2 text-slate-400 hover:text-rose-400 transition"><i data-lucide="log-out" class="h-4 w-4"></i></button>
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 p-6 md:p-8 overflow-y-auto">
-      
-      <!-- TAB STOK BARANG -->
-      <section id="tab-stok" class="space-y-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-bold">Master Stok Barang</h2>
-            <p class="text-gray-400 text-sm">Daftar stok bahan baku yang tersedia di dapur</p>
-          </div>
-          <div class="relative min-w-[240px]">
-            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" id="search-stok" placeholder="Cari bahan baku..." onkeyup="filterTable('stok')" class="w-full pl-9 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
-          </div>
-        </div>
-
-        <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-xl">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse" id="table-stok">
-              <thead>
-                <tr class="bg-gray-700/50 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-700">
-                  <th class="p-4">No</th>
-                  <th class="p-4">Nama Barang</th>
-                  <th class="p-4">Jumlah Stok</th>
-                  <th class="p-4">Satuan</th>
-                  <th class="p-4">Keterangan</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-700/50 text-sm" id="tbody-stok">
-                <tr>
-                  <td colspan="5" class="p-8 text-center text-gray-400">Memuat data stok...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB DATA PEMAKAIAN -->
-      <section id="tab-pemakaian" class="space-y-6 hidden">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-bold">Data Pemakaian</h2>
-            <p class="text-gray-400 text-sm">Riwayat penggunaan bahan baku oleh petugas</p>
-          </div>
-          <div class="relative min-w-[240px]">
-            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" id="search-pemakaian" placeholder="Cari riwayat pemakaian..." onkeyup="filterTable('pemakaian')" class="w-full pl-9 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
-          </div>
-        </div>
-
-        <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-xl">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse" id="table-pemakaian">
-              <thead>
-                <tr class="bg-gray-700/50 text-gray-300 text-xs uppercase tracking-wider border-b border-gray-700">
-                  <th class="p-4">No</th>
-                  <th class="p-4">Tanggal</th>
-                  <th class="p-4">Jam</th>
-                  <th class="p-4">Nama Barang</th>
-                  <th class="p-4">Jumlah</th>
-                  <th class="p-4">Satuan</th>
-                  <th class="p-4">Petugas</th>
-                  <th class="p-4">Catatan</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-700/50 text-sm" id="tbody-pemakaian">
-                <tr>
-                  <td colspan="8" class="p-8 text-center text-gray-400">Memuat riwayat pemakaian...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB INPUT PEMAKAIAN -->
-      <section id="tab-input" class="space-y-6 hidden">
+    <div class="flex-1 flex flex-col">
+      <header class="border-b border-slate-800/80 bg-slate-900/40 px-8 py-4 flex items-center justify-between backdrop-blur-xl">
         <div>
-          <h2 class="text-2xl font-bold">Catat Pemakaian Bahan</h2>
-          <p class="text-gray-400 text-sm">Form pengurangan stok untuk kebutuhan memasak</p>
+          <h2 class="text-lg font-bold text-white">Dashboard Pengelolaan Stok</h2>
+          <p class="text-xs text-slate-400">Monitoring & Input Manajemen Dapur</p>
+        </div>
+        <div class="flex items-center gap-3.5 rounded-2xl border border-slate-800 bg-slate-900/90 px-4 py-2">
+          <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400"><i data-lucide="clock" class="h-4 w-4"></i></div>
+          <div>
+            <div id="clock24" class="text-base font-extrabold tracking-wider text-white font-mono leading-none">00:00:00</div>
+            <div id="dateToday" class="text-[10px] text-slate-400 mt-0.5">--</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- TAB 1: MASTER BARANG -->
+      <main id="tabStok" class="p-8 space-y-6">
+        <div class="flex items-center justify-between gap-4">
+          <div class="relative flex-1 max-w-xs">
+            <i data-lucide="search" class="absolute left-3 top-2.5 h-4 w-4 text-slate-500"></i>
+            <input type="text" id="searchBarang" oninput="renderMasterTable()" placeholder="Cari nama barang..." class="w-full rounded-xl border border-slate-800 bg-slate-900 pl-9 pr-4 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
+          </div>
+          <button onclick="loadAllData()" class="flex items-center gap-2 rounded-xl bg-slate-800 border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition">
+            <i data-lucide="refresh-cw" class="h-4 w-4"></i> Refresh
+          </button>
         </div>
 
-        <div class="max-w-xl bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
-          <form id="form-pemakaian" onsubmit="submitPemakaian(event)" class="space-y-4">
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase text-[11px]">
+              <tr>
+                <th class="px-6 py-4">ID</th>
+                <th class="px-6 py-4">Nama Barang</th>
+                <th class="px-6 py-4 text-center">Jumlah Stok</th>
+                <th class="px-6 py-4">Satuan</th>
+                <th class="px-6 py-4">Tempat Simpan</th>
+                <th class="px-6 py-4 text-center">Angka Batas</th>
+                <th class="px-6 py-4 text-center">Status</th>
+                <th class="px-6 py-4 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tableMasterBody" class="divide-y divide-slate-800/60"></tbody>
+          </table>
+        </div>
+      </main>
+
+      <!-- TAB 2: INPUT DATA STOK -->
+      <main id="tabInputStok" class="hidden p-8 max-w-2xl">
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 space-y-5 backdrop-blur-xl">
+          <h3 class="text-base font-bold text-white border-b border-slate-800 pb-3" id="formStokTitle">Tambah / Restok Barang</h3>
+          <form onsubmit="handleSaveBarang(event)" class="space-y-4">
+            <input type="hidden" id="editBarangId">
             
-            <!-- SEARCHABLE BARANG DROPDOWN -->
             <div>
-              <label class="block text-sm font-medium mb-1 text-gray-300">Pilih Barang</label>
-              <select id="select-barang" required placeholder="Cari atau pilih barang...">
-                <option value="">Pilih barang...</option>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Opsi Barang</label>
+              <select id="selectJenisInput" onchange="toggleOpsiBarang()" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+                <option value="BARU">-- Tambah Barang Baru --</option>
+                <option value="LAMA">-- Restok Barang Ada (Akumulasi Otomatis) --</option>
               </select>
+            </div>
+
+            <div id="containerBarangLama" class="hidden">
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Pilih Barang</label>
+              <select id="selectBarangLama" onchange="autofillBarangLama()" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500"></select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Barang</label>
+              <input type="text" id="formNamaBarang" required placeholder="Contoh: Beras Premium" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium mb-1 text-gray-300">Jumlah Terpakai</label>
-                <input type="number" step="any" id="input-jumlah" required min="0.01" placeholder="0" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-indigo-500">
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah</label>
+                <input type="number" step="any" id="formJumlah" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
               </div>
               <div>
-                <label class="block text-sm font-medium mb-1 text-gray-300">Satuan</label>
-                <input type="text" id="input-satuan" readonly placeholder="Otomatis" class="w-full px-3 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-gray-400 cursor-not-allowed">
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Satuan</label>
+                <input type="text" id="formSatuan" required placeholder="Kg / Pcs / Liter" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
               </div>
             </div>
 
-            <!-- SEARCHABLE PETUGAS DROPDOWN -->
-            <div>
-              <label class="block text-sm font-medium mb-1 text-gray-300">Petugas Pemakai</label>
-              <select id="select-petugas" required placeholder="Cari nama petugas...">
-                <option value="">Pilih Petugas...</option>
-                <option value="Petugas Dapur">Petugas Dapur</option>
-                <option value="Ahmad">Ahmad</option>
-                <option value="Budi">Budi</option>
-                <option value="Siti">Siti</option>
-              </select>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Tempat Simpan</label>
+                <input type="text" id="formTempatSimpan" required placeholder="Gudang A / Rak 2" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Angka Batas (Notifikasi)</label>
+                <input type="number" step="any" id="formAngkaBatas" required placeholder="5" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+              </div>
             </div>
 
-            <div>
-              <label class="block text-sm font-medium mb-1 text-gray-300">Catatan / Keterangan</label>
-              <textarea id="input-catatan" rows="2" placeholder="Contoh: Untuk menu prasmanan (opsional)" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-indigo-500"></textarea>
+            <div class="flex gap-2 pt-2">
+              <button type="submit" id="btnSaveBarang" class="flex-1 rounded-xl bg-amber-500 py-3 text-xs font-bold text-slate-950 hover:bg-amber-400 transition">SIMPAN DATA STOK</button>
+              <button type="button" onclick="resetFormStok()" class="px-4 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">Reset</button>
             </div>
-
-            <button type="submit" id="btn-submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-all flex items-center justify-center space-x-2">
-              <i data-lucide="save" class="w-5 h-5"></i>
-              <span>Simpan Pemakaian</span>
-            </button>
           </form>
         </div>
-      </section>
+      </main>
 
-    </main>
+      <!-- TAB 3: DATA PEMAKAIAN -->
+      <main id="tabLaporan" class="hidden p-8 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+          <div class="flex items-center gap-3 text-xs">
+            <span class="font-semibold text-slate-300">Filter Tanggal:</span>
+            <input type="date" id="filterStart" class="rounded-xl border border-slate-800 bg-slate-950 p-2 text-white">
+            <span class="text-slate-500">s/d</span>
+            <input type="date" id="filterEnd" class="rounded-xl border border-slate-800 bg-slate-950 p-2 text-white">
+            <button onclick="renderPemakaianTable()" class="rounded-xl bg-slate-800 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-700">Terapkan</button>
+          </div>
+
+          <button onclick="exportToExcelFormatted(event)" class="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition">
+            <i data-lucide="file-spreadsheet" class="h-4 w-4"></i> Export Excel (.XLSX)
+          </button>
+        </div>
+
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase text-[11px]">
+              <tr>
+                <th class="px-6 py-4">ID Transaksi</th>
+                <th class="px-6 py-4">Tanggal & Waktu</th>
+                <th class="px-6 py-4">Nama Barang</th>
+                <th class="px-6 py-4 text-center">Jumlah Dipakai</th>
+                <th class="px-6 py-4 text-center">Dipakai Untuk</th>
+                <th class="px-6 py-4 text-center">Petugas</th>
+              </tr>
+            </thead>
+            <tbody id="tablePemakaianBody" class="divide-y divide-slate-800/60"></tbody>
+          </table>
+        </div>
+      </main>
+
+    </div>
   </div>
 
-  <!-- Tom Select JS -->
-  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+  <!-- TAMPILAN PETUGAS -->
+  <div id="petugasLayout" class="hidden min-h-full p-4 max-w-md mx-auto space-y-5">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div class="flex items-center gap-2">
+        <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500 text-slate-950 font-bold"><i data-lucide="chef-hat" class="h-4 w-4"></i></div>
+        <div>
+          <h1 class="font-bold text-sm text-white">Input Pemakaian Barang</h1>
+          <p class="text-[10px] text-slate-400" id="petugasNameDisplay">Petugas</p>
+        </div>
+      </div>
+      <button onclick="logout()" class="text-xs bg-slate-800 px-3 py-1.5 rounded-xl text-slate-300">Keluar</button>
+    </div>
+
+    <form onsubmit="handlePetugasPemakaian(event)" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-4 shadow-xl backdrop-blur-xl">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Kategori Petugas</label>
+        <select id="petugasKategori" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500">
+          <option value="Petugas Dapur">Petugas Dapur</option>
+          <option value="Petugas Distribusi">Petugas Distribusi</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Pilih Barang</label>
+        <input type="text" id="petugasInputSelect" list="list-barang-stok" oninput="onSelectBarangChange()" placeholder="Ketik nama barang..." required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500" autocomplete="off">
+        <datalist id="list-barang-stok"></datalist>
+        <p id="infoStokTersedia" class="hidden text-[11px] text-amber-400 mt-1.5 font-medium">Sisa Stok: <span id="valStokTersedia" class="font-bold">0</span></p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Pakai</label>
+        <input type="number" id="petugasJumlah" step="any" min="0.1" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-center text-2xl font-bold text-amber-400 focus:border-amber-500">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Dipakai Untuk</label>
+        <select id="petugasPeruntukan" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs text-white focus:border-amber-500">
+          <option value="Santri">Santri</option>
+          <option value="Market Luar">Market Luar</option>
+        </select>
+      </div>
+
+      <button type="submit" id="btnSavePemakaian" class="w-full rounded-xl bg-amber-500 py-3.5 text-xs font-bold text-slate-950 shadow-lg hover:bg-amber-400 transition">💾 SIMPAN PEMAKAIAN</button>
+    </form>
+  </div>
 
   <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxWQxY0DvLbpQPm7C4st4jw93GftFzqz7AYLUVfhSNObVgS2lYbAQOFZL2iQOCz_dc/exec"; // Masukkan URL Web App Anda
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwT4C9tb7_Iq1LLAf-Jucs9evJUxcqoa-i0wuazhQ_gIycyD9QHw48oop5zV85-M88h/exec";
 
-    let masterData = [];
-    let pemakaianData = [];
-    let selectBarangInstance, selectPetugasInstance;
+    let globalMasterBarang = [];
+    let globalDataPemakaian = [];
+    let currentUser = null;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
+    lucide.createIcons();
 
-      // Inisialisasi Search Dropdown menggunakan Tom Select
-      selectBarangInstance = new TomSelect('#select-barang', { create: false, sortField: { field: "text" } });
-      selectPetugasInstance = new TomSelect('#select-petugas', { create: false, sortField: { field: "text" } });
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock24').textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('dateToday').textContent = now.toLocaleDateString('id-ID', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-      // Auto-fill satuan saat barang dipilih
-      selectBarangInstance.on('change', (val) => {
-        const barang = masterData.find(b => b.nama === val);
-        document.getElementById('input-satuan').value = barang ? barang.satuan : '';
-      });
-
-      fetchData();
-    });
-
-    function switchTab(tab) {
-      ['stok', 'pemakaian', 'input'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.add('hidden');
-        document.getElementById(`nav-${t}`).className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-700/50 hover:text-gray-200 font-medium transition-all";
-      });
-
-      document.getElementById(`tab-${tab}`).classList.remove('hidden');
-      document.getElementById(`nav-${tab}`).className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600 text-white font-medium transition-all";
+    async function callBackend(action, payload = {}) {
+      payload.action = action;
+      const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+      return await res.json();
     }
 
-    function fetchData() {
-      const refreshIcon = document.getElementById('refresh-icon');
-      refreshIcon.classList.add('animate-spin');
-
-      fetch(`${GAS_URL}?action=GET_DATA`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === 'success') {
-            masterData = data.masterBarang || [];
-            pemakaianData = data.pemakaian || [];
-
-            renderStokTable(masterData);
-            renderPemakaianTable(pemakaianData);
-            populateBarangDropdown(masterData);
-          }
-        })
-        .catch(err => console.error("Error fetching data:", err))
-        .finally(() => {
-          refreshIcon.classList.remove('animate-spin');
-        });
-    }
-
-    function renderStokTable(data) {
-      const tbody = document.getElementById('tbody-stok');
-      if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400">Belum ada data stok.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = data.map((item, index) => `
-        <tr class="hover:bg-gray-700/30 transition-all">
-          <td class="p-4 text-gray-400">${index + 1}</td>
-          <td class="p-4 font-semibold text-white">${item.nama}</td>
-          <td class="p-4">
-            <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${item.jumlah < 5 ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}">
-              ${item.jumlah}
-            </span>
-          </td>
-          <td class="p-4 text-gray-300">${item.satuan}</td>
-          <td class="p-4 text-gray-400">${item.keterangan || '-'}</td>
-        </tr>
-      `).join('');
-    }
-
-    function renderPemakaianTable(data) {
-      const tbody = document.getElementById('tbody-pemakaian');
-      if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-gray-400">Belum ada data pemakaian.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = data.map((item, index) => `
-        <tr class="hover:bg-gray-700/30 transition-all">
-          <td class="p-4 text-gray-400">${index + 1}</td>
-          <td class="p-4 text-gray-300">${item.tanggal}</td>
-          <td class="p-4 text-gray-400">${item.jam}</td>
-          <td class="p-4 font-semibold text-white">${item.namaBarang}</td>
-          <td class="p-4 text-indigo-400 font-semibold">${item.jumlah}</td>
-          <td class="p-4 text-gray-300">${item.satuan}</td>
-          <td class="p-4 text-gray-300">${item.petugas}</td>
-          <td class="p-4 text-gray-400">${item.catatan || '-'}</td>
-        </tr>
-      `).join('');
-    }
-
-    function populateBarangDropdown(data) {
-      selectBarangInstance.clearOptions();
-      data.forEach(item => {
-        selectBarangInstance.addOption({ value: item.nama, text: `${item.nama} (Sisa: ${item.jumlah} ${item.satuan})` });
-      });
-    }
-
-    function filterTable(type) {
-      const query = document.getElementById(`search-${type}`).value.toLowerCase();
-      if (type === 'stok') {
-        const filtered = masterData.filter(item => item.nama.toLowerCase().includes(query));
-        renderStokTable(filtered);
-      } else {
-        const filtered = pemakaianData.filter(item => 
-          item.namaBarang.toLowerCase().includes(query) || 
-          item.petugas.toLowerCase().includes(query)
-        );
-        renderPemakaianTable(filtered);
-      }
-    }
-
-    function submitPemakaian(e) {
+    async function handleLogin(e) {
       e.preventDefault();
-      const btn = document.getElementById('btn-submit');
+      const btn = document.getElementById('btnLoginSubmit');
       btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i><span>Menyimpan...</span>`;
-      lucide.createIcons();
+      btn.textContent = 'MEMPROSES...';
 
+      try {
+        const res = await callBackend('LOGIN', {
+          username: document.getElementById('inputUsername').value.trim(),
+          pin: document.getElementById('inputPin').value.trim()
+        });
+
+        if (res.success) {
+          currentUser = res;
+          document.getElementById('loginScreen').classList.add('hidden');
+
+          if (res.role.toLowerCase() === 'admin') {
+            document.getElementById('adminNameDisplay').textContent = res.username;
+            document.getElementById('adminLayout').classList.remove('hidden');
+          } else {
+            document.getElementById('petugasNameDisplay').textContent = res.username;
+            document.getElementById('petugasLayout').classList.remove('hidden');
+          }
+          await loadAllData();
+        } else {
+          alert('⚠️ ' + res.message);
+        }
+      } catch (err) {
+        alert('❌ Gagal koneksi ke server.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'MASUK KE SISTEM';
+      }
+    }
+
+    function logout() {
+      location.reload();
+    }
+
+    function switchAdminTab(tab) {
+      ['tabStok', 'tabInputStok', 'tabLaporan'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      ['menuStok', 'menuInputStok', 'menuLaporan'].forEach(id => document.getElementById(id).className = "w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition");
+
+      if (tab === 'stok') {
+        document.getElementById('tabStok').classList.remove('hidden');
+        document.getElementById('menuStok').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+      } else if (tab === 'inputStok') {
+        document.getElementById('tabInputStok').classList.remove('hidden');
+        document.getElementById('menuInputStok').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+      } else {
+        document.getElementById('tabLaporan').classList.remove('hidden');
+        document.getElementById('menuLaporan').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+      }
+    }
+
+    async function loadAllData() {
+      try {
+        const res = await callBackend('GET_ALL_DATA');
+        if (res.success) {
+          globalMasterBarang = res.barang;
+          globalDataPemakaian = res.pemakaian;
+          renderMasterTable();
+          renderPemakaianTable();
+          populateSelectOptions();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderMasterTable() {
+      const tbody = document.getElementById('tableMasterBody');
+      const query = document.getElementById('searchBarang').value.toLowerCase();
+      tbody.innerHTML = '';
+
+      const filtered = globalMasterBarang.filter(b => b.namaBarang.toLowerCase().includes(query));
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-slate-500">Tidak ada data barang.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        const statusBadge = item.isMenipis 
+          ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Stok Menipis</span>`
+          : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Aman</span>`;
+
+        tbody.innerHTML += `
+          <tr class="transition hover:bg-slate-800/30">
+            <td class="px-6 py-4 font-mono text-slate-400">${item.id}</td>
+            <td class="px-6 py-4 font-semibold text-white">${item.namaBarang}</td>
+            <td class="px-6 py-4 text-center font-bold ${item.isMenipis ? 'text-rose-400' : 'text-amber-400'}">${item.jumlah}</td>
+            <td class="px-6 py-4 text-slate-400">${item.satuan}</td>
+            <td class="px-6 py-4 text-slate-400">${item.tempatSimpan}</td>
+            <td class="px-6 py-4 text-center text-slate-400">${item.angkaBatas}</td>
+            <td class="px-6 py-4 text-center">${statusBadge}</td>
+            <td class="px-6 py-4 text-center">
+              <div class="flex justify-center gap-2">
+                <button onclick="editBarang('${item.id}')" class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg hover:bg-amber-500/20"><i data-lucide="edit" class="h-3.5 w-3.5"></i></button>
+                <button onclick="deleteBarang('${item.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      lucide.createIcons();
+    }
+
+    function renderPemakaianTable() {
+      const tbody = document.getElementById('tablePemakaianBody');
+      const start = document.getElementById('filterStart').value;
+      const end = document.getElementById('filterEnd').value;
+
+      tbody.innerHTML = '';
+
+      let filtered = globalDataPemakaian;
+      if (start && end) {
+        filtered = globalDataPemakaian.filter(item => {
+          const itemDate = item.tanggal.split(' ')[0];
+          return itemDate >= start && itemDate <= end;
+        });
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-slate-500">Tidak ada log transaksi.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        tbody.innerHTML += `
+          <tr class="transition hover:bg-slate-800/30">
+            <td class="px-6 py-4 font-mono text-slate-400">${item.id}</td>
+            <td class="px-6 py-4 text-slate-400">${item.tanggal}</td>
+            <td class="px-6 py-4 font-semibold text-white">${item.namaBarang}</td>
+            <td class="px-6 py-4 text-center font-bold text-white">${item.jumlahDipakai}</td>
+            <td class="px-6 py-4 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.dipakaiUntuk === 'Santri' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'}">${item.dipakaiUntuk}</span></td>
+            <td class="px-6 py-4 text-center text-slate-400">${item.kategoriPetugas}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function populateSelectOptions() {
+      const selectLama = document.getElementById('selectBarangLama');
+      const datalist = document.getElementById('list-barang-stok');
+
+      selectLama.innerHTML = '<option value="">-- Pilih Barang --</option>';
+      datalist.innerHTML = '';
+
+      globalMasterBarang.forEach(b => {
+        selectLama.innerHTML += `<option value="${b.id}">${b.namaBarang} (Stok: ${b.jumlah} ${b.satuan})</option>`;
+        
+        const opt = document.createElement('option');
+        opt.value = b.namaBarang;
+        opt.label = `(Stok: ${b.jumlah} ${b.satuan})`;
+        datalist.appendChild(opt);
+      });
+    }
+
+    function toggleOpsiBarang() {
+      const mode = document.getElementById('selectJenisInput').value;
+      if (mode === 'LAMA') {
+        document.getElementById('containerBarangLama').classList.remove('hidden');
+      } else {
+        document.getElementById('containerBarangLama').classList.add('hidden');
+        resetFormStok();
+      }
+    }
+
+    function autofillBarangLama() {
+      const id = document.getElementById('selectBarangLama').value;
+      const found = globalMasterBarang.find(b => b.id === id);
+      if (found) {
+        document.getElementById('formNamaBarang').value = found.namaBarang;
+        document.getElementById('formSatuan').value = found.satuan;
+        document.getElementById('formTempatSimpan').value = found.tempatSimpan;
+        document.getElementById('formAngkaBatas').value = found.angkaBatas;
+      }
+    }
+
+    function editBarang(id) {
+      const found = globalMasterBarang.find(b => b.id === id);
+      if (found) {
+        switchAdminTab('inputStok');
+        document.getElementById('formStokTitle').textContent = "Edit Data Barang";
+        document.getElementById('editBarangId').value = found.id;
+        document.getElementById('formNamaBarang').value = found.namaBarang;
+        document.getElementById('formJumlah').value = found.jumlah;
+        document.getElementById('formSatuan').value = found.satuan;
+        document.getElementById('formTempatSimpan').value = found.tempatSimpan;
+        document.getElementById('formAngkaBatas').value = found.angkaBatas;
+      }
+    }
+
+    async function deleteBarang(id) {
+      if (confirm('Yakin ingin menghapus barang ini dari Master Data?')) {
+        const res = await callBackend('DELETE_BARANG', { id: id });
+        alert(res.message);
+        if (res.success) await loadAllData();
+      }
+    }
+
+    async function handleSaveBarang(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSaveBarang');
+      btn.disabled = true;
+
+      const editId = document.getElementById('editBarangId').value;
       const payload = {
-        action: "TAMBAH_PEMAKAIAN",
-        namaBarang: selectBarangInstance.getValue(),
-        jumlah: Number(document.getElementById('input-jumlah').value),
-        satuan: document.getElementById('input-satuan').value,
-        petugas: selectPetugasInstance.getValue(),
-        catatan: document.getElementById('input-catatan').value
+        id: editId || null,
+        isEdit: !!editId,
+        namaBarang: document.getElementById('formNamaBarang').value.trim(),
+        jumlah: parseFloat(document.getElementById('formJumlah').value),
+        satuan: document.getElementById('formSatuan').value.trim(),
+        tempatSimpan: document.getElementById('formTempatSimpan').value.trim(),
+        angkaBatas: parseFloat(document.getElementById('formAngkaBatas').value)
       };
 
-      fetch(GAS_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(res => {
-        if (res.status === 'success') {
-          alert('Pemakaian berhasil dicatat!');
-          document.getElementById('form-pemakaian').reset();
-          selectBarangInstance.clear();
-          selectPetugasInstance.clear();
-          fetchData();
-          switchTab('pemakaian');
-        } else {
-          alert('Gagal menyimpan: ' + res.message);
-        }
-      })
-      .catch(err => alert('Terjadi kesalahan jaringan.'))
-      .finally(() => {
-        btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i><span>Simpan Pemakaian</span>`;
-        lucide.createIcons();
+      const res = await callBackend('SAVE_BARANG', { payload: payload });
+      alert(res.message);
+      btn.disabled = false;
+
+      if (res.success) {
+        resetFormStok();
+        switchAdminTab('stok');
+        await loadAllData();
+      }
+    }
+
+    function resetFormStok() {
+      document.getElementById('editBarangId').value = '';
+      document.getElementById('formStokTitle').textContent = "Tambah / Restok Barang";
+      document.getElementById('formNamaBarang').value = '';
+      document.getElementById('formJumlah').value = '';
+      document.getElementById('formSatuan').value = '';
+      document.getElementById('formTempatSimpan').value = '';
+      document.getElementById('formAngkaBatas').value = '';
+      document.getElementById('selectJenisInput').value = 'BARU';
+      document.getElementById('containerBarangLama').classList.add('hidden');
+    }
+
+    function onSelectBarangChange() {
+      const val = document.getElementById('petugasInputSelect').value.trim();
+      const found = globalMasterBarang.find(b => b.namaBarang.toLowerCase() === val.toLowerCase());
+      if (found) {
+        document.getElementById('valStokTersedia').textContent = `${found.jumlah} ${found.satuan}`;
+        document.getElementById('infoStokTersedia').classList.remove('hidden');
+      } else {
+        document.getElementById('infoStokTersedia').classList.add('hidden');
+      }
+    }
+
+    async function handlePetugasPemakaian(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSavePemakaian');
+      btn.disabled = true;
+
+      const res = await callBackend('ADD_PEMAKAIAN', {
+        kategoriPetugas: document.getElementById('petugasKategori').value,
+        namaBarang: document.getElementById('petugasInputSelect').value.trim(),
+        jumlah: parseFloat(document.getElementById('petugasJumlah').value),
+        peruntukan: document.getElementById('petugasPeruntukan').value
       });
+
+      alert(res.message);
+      btn.disabled = false;
+
+      if (res.success) {
+        document.getElementById('petugasInputSelect').value = '';
+        document.getElementById('petugasJumlah').value = '';
+        document.getElementById('infoStokTersedia').classList.add('hidden');
+        await loadAllData();
+      }
+    }
+
+    // Mengunduh berkas .XLSX murni secara asynchronous
+    async function exportToExcelFormatted(evt) {
+      const start = document.getElementById('filterStart').value;
+      const end = document.getElementById('filterEnd').value;
+
+      const btnExport = evt.currentTarget;
+      const originalContent = btnExport.innerHTML;
+      btnExport.innerHTML = `<i data-lucide="loader" class="h-4 w-4 animate-spin"></i> Memproses XLSX...`;
+      lucide.createIcons();
+
+      try {
+        const res = await callBackend('EXPORT_EXCEL', { start: start, end: end });
+
+        if (res.success) {
+          const byteCharacters = atob(res.fileData);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = res.fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else {
+          alert('⚠️ Gagal membuat file Excel: ' + res.message);
+        }
+      } catch (err) {
+        alert('❌ Terjadi kesalahan saat mengunduh file.');
+        console.error(err);
+      } finally {
+        btnExport.innerHTML = originalContent;
+        lucide.createIcons();
+      }
     }
   </script>
 </body>

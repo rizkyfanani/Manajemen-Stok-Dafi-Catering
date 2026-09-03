@@ -200,6 +200,7 @@
                 <th class="px-6 py-4 text-center">Jumlah Dipakai</th>
                 <th class="px-6 py-4 text-center">Dipakai Untuk</th>
                 <th class="px-6 py-4 text-center">Petugas</th>
+                <th class="px-6 py-4 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody id="tablePemakaianBody" class="divide-y divide-slate-800/60"></tbody>
@@ -207,6 +208,51 @@
         </div>
       </main>
 
+    </div>
+  </div>
+
+  <!-- MODAL EDIT PEMAKAIAN -->
+  <div id="modalEditPemakaian" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-white">Edit Transaksi Pemakaian</h3>
+        <button onclick="closeModalEditPemakaian()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="h-5 w-5"></i></button>
+      </div>
+      <form onsubmit="handleUpdatePemakaian(event)" class="space-y-4">
+        <input type="hidden" id="editPemakaianId">
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Kategori Petugas</label>
+          <select id="editPetugasKategori" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+            <option value="Petugas Dapur">Petugas Dapur</option>
+            <option value="Petugas Distribusi">Petugas Distribusi</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Barang</label>
+          <input type="text" id="editPemakaianNamaBarang" list="list-barang-stok" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Pakai</label>
+            <input type="number" step="any" min="0.1" id="editPemakaianJumlah" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Dipakai Untuk</label>
+            <select id="editPemakaianPeruntukan" required class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+              <option value="Santri">Santri</option>
+              <option value="Market Luar">Market Luar</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
+          <button type="button" onclick="closeModalEditPemakaian()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs text-slate-300 hover:bg-slate-700">Batal</button>
+          <button type="submit" id="btnUpdatePemakaian" class="px-4 py-2 rounded-xl bg-amber-500 text-xs font-bold text-slate-950 hover:bg-amber-400">Simpan Perubahan</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -257,7 +303,7 @@
   </div>
 
   <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwT4C9tb7_Iq1LLAf-Jucs9evJUxcqoa-i0wuazhQ_gIycyD9QHw48oop5zV85-M88h/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycby-3yUYVj4ZXZW_1OX1dNvS9_xWqKkB-8r2HDoq-_zzhZ-gdUgsLBlWljIT1k5LX9yn/exec";
 
     let globalMasterBarang = [];
     let globalDataPemakaian = [];
@@ -403,7 +449,7 @@
       }
 
       if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-slate-500">Tidak ada log transaksi.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-slate-500">Tidak ada log transaksi.</td></tr>';
         return;
       }
 
@@ -416,9 +462,62 @@
             <td class="px-6 py-4 text-center font-bold text-white">${item.jumlahDipakai}</td>
             <td class="px-6 py-4 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.dipakaiUntuk === 'Santri' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'}">${item.dipakaiUntuk}</span></td>
             <td class="px-6 py-4 text-center text-slate-400">${item.kategoriPetugas}</td>
+            <td class="px-6 py-4 text-center">
+              <div class="flex justify-center gap-2">
+                <button onclick="openEditPemakaian('${item.id}')" class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg hover:bg-amber-500/20"><i data-lucide="edit" class="h-3.5 w-3.5"></i></button>
+                <button onclick="deletePemakaian('${item.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i></button>
+              </div>
+            </td>
           </tr>
         `;
       });
+      lucide.createIcons();
+    }
+
+    function openEditPemakaian(id) {
+      const found = globalDataPemakaian.find(p => p.id === id);
+      if (found) {
+        document.getElementById('editPemakaianId').value = found.id;
+        document.getElementById('editPetugasKategori').value = found.kategoriPetugas;
+        document.getElementById('editPemakaianNamaBarang').value = found.namaBarang;
+        document.getElementById('editPemakaianJumlah').value = found.jumlahDipakai;
+        document.getElementById('editPemakaianPeruntukan').value = found.dipakaiUntuk;
+        document.getElementById('modalEditPemakaian').classList.remove('hidden');
+      }
+    }
+
+    function closeModalEditPemakaian() {
+      document.getElementById('modalEditPemakaian').classList.add('hidden');
+    }
+
+    async function handleUpdatePemakaian(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnUpdatePemakaian');
+      btn.disabled = true;
+
+      const res = await callBackend('UPDATE_PEMAKAIAN', {
+        id: document.getElementById('editPemakaianId').value,
+        kategoriPetugas: document.getElementById('editPetugasKategori').value,
+        namaBarang: document.getElementById('editPemakaianNamaBarang').value.trim(),
+        jumlah: parseFloat(document.getElementById('editPemakaianJumlah').value),
+        peruntukan: document.getElementById('editPemakaianPeruntukan').value
+      });
+
+      alert(res.message);
+      btn.disabled = false;
+
+      if (res.success) {
+        closeModalEditPemakaian();
+        await loadAllData();
+      }
+    }
+
+    async function deletePemakaian(id) {
+      if (confirm('Yakin ingin menghapus riwayat pemakaian ini? Stok barang di master akan dikembalikan otomatis.')) {
+        const res = await callBackend('DELETE_PEMAKAIAN', { id: id });
+        alert(res.message);
+        if (res.success) await loadAllData();
+      }
     }
 
     function populateSelectOptions() {
@@ -554,7 +653,6 @@
       }
     }
 
-    // Mengunduh berkas .XLSX murni secara asynchronous
     async function exportToExcelFormatted(evt) {
       const start = document.getElementById('filterStart').value;
       const end = document.getElementById('filterEnd').value;
@@ -589,7 +687,7 @@
       } catch (err) {
         alert('❌ Terjadi kesalahan saat mengunduh file.');
         console.error(err);
-      } finally {
+      } font-medium {
         btnExport.innerHTML = originalContent;
         lucide.createIcons();
       }

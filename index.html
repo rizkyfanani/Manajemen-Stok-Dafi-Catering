@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dafi Catering Stock & Usage System</title>
+  <title>DAFI Catering - Stock & Usage System</title>
+  
+  <!-- FAVICON TAB BROWSER & MOBILE APP ICON (NETLIFY) -->
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <meta name="theme-color" content="#0f172a">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,13 +20,14 @@
 <body class="h-full text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
 
   <!-- LOGIN SCREEN -->
-  <div id="loginScreen" class="flex min-h-full items-center justify-center px-4 py-12">
-    <div class="w-full max-w-md space-y-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-8 shadow-2xl backdrop-blur-xl">
+  <div id="loginScreen" class="flex min-h-full items-center justify-center p-4">
+    <div class="w-full max-w-md space-y-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
       <div class="text-center">
-    <div class="mx-auto flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-amber-500/20 shadow-lg shadow-amber-500/10">
-      <img src="URL_LOGO_KAMU.png" alt="DAFI Catering Logo" class="h-full w-full object-contain">
-    </div>
-        <h2 class="mt-4 text-2xl font-extrabold text-white">Catering Control</h2>
+        <div class="mx-auto flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-amber-500/20 shadow-lg shadow-amber-500/10 bg-slate-900 p-1">
+          <img src="logo.png" alt="DAFI Catering Logo" class="h-full w-full object-contain" onerror="this.remove(); document.getElementById('fallbackIconLogin').classList.remove('hidden');">
+          <i id="fallbackIconLogin" data-lucide="utensils" class="hidden h-7 w-7 text-amber-500"></i>
+        </div>
+        <h2 class="mt-4 text-2xl font-extrabold text-white">DAFI Catering</h2>
         <p class="mt-1 text-xs text-slate-400">Sistem Manajemen Stok & Pemakaian Bahan</p>
       </div>
       <form class="space-y-4" onsubmit="handleLogin(event)">
@@ -38,15 +45,32 @@
   </div>
 
   <!-- ADMIN DASHBOARD -->
-  <div id="adminLayout" class="hidden min-h-full flex">
-    <aside class="w-64 border-r border-slate-800/80 bg-slate-900/60 backdrop-blur-xl flex flex-col justify-between p-4">
-      <div class="space-y-6">
-        <div class="flex items-center gap-3 px-2">
-      <div class="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-slate-900 border border-slate-800">
-        <img src="logo.png" alt="DAFI Catering" class="h-full w-full object-contain">
+  <div id="adminLayout" class="hidden min-h-full flex flex-col md:flex-row">
+    
+    <!-- HEADER MOBILE (Tampil di Layar Kecil) -->
+    <header class="md:hidden flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 py-3 backdrop-blur-xl sticky top-0 z-40">
+      <div class="flex items-center gap-3">
+        <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl bg-slate-900 border border-slate-800 p-0.5">
+          <img src="logo.png" alt="DAFI Catering" class="h-full w-full object-contain" onerror="this.remove(); document.getElementById('fallbackIconMob').classList.remove('hidden');">
+          <i id="fallbackIconMob" data-lucide="chef-hat" class="hidden h-4 w-4 text-amber-500"></i>
+        </div>
+        <span class="font-bold text-sm text-white">DAFI Catering</span>
       </div>
+      <button onclick="toggleSidebarMobile()" class="p-2 text-slate-300 hover:text-white">
+        <i data-lucide="menu" class="h-6 w-6"></i>
+      </button>
+    </header>
+
+    <!-- SIDEBAR (Desktop & Mobile Dropdown) -->
+    <aside id="sidebarAdmin" class="hidden md:flex w-full md:w-64 border-r border-slate-800/80 bg-slate-900/60 backdrop-blur-xl flex-col justify-between p-4 fixed md:sticky top-0 z-30 h-auto md:h-screen">
+      <div class="space-y-6">
+        <div class="hidden md:flex items-center gap-3 px-2">
+          <div class="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-slate-900 border border-slate-800 p-1">
+            <img src="logo.png" alt="DAFI Catering" class="h-full w-full object-contain" onerror="this.remove(); document.getElementById('fallbackIconAdmin').classList.remove('hidden');">
+            <i id="fallbackIconAdmin" data-lucide="chef-hat" class="hidden h-5 w-5 text-amber-500"></i>
+          </div>
           <div>
-            <h1 class="font-bold text-sm text-white">CateringHub</h1>
+            <h1 class="font-bold text-sm text-white">DAFI Catering</h1>
             <span class="text-[10px] text-amber-400 font-medium">Panel Administrator</span>
           </div>
         </div>
@@ -64,7 +88,7 @@
         </nav>
       </div>
 
-      <div class="border-t border-slate-800 pt-4 px-2 flex items-center justify-between">
+      <div class="border-t border-slate-800 pt-4 px-2 flex items-center justify-between mt-4 md:mt-0">
         <div class="text-xs">
           <p class="font-bold text-white" id="adminNameDisplay">Admin</p>
           <p class="text-[10px] text-emerald-400 font-semibold">Online</p>
@@ -73,8 +97,9 @@
       </div>
     </aside>
 
-    <div class="flex-1 flex flex-col">
-      <header class="border-b border-slate-800/80 bg-slate-900/40 px-8 py-4 flex items-center justify-between backdrop-blur-xl">
+    <!-- CONTENT AREA -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <header class="hidden md:flex border-b border-slate-800/80 bg-slate-900/40 px-8 py-4 items-center justify-between backdrop-blur-xl">
         <div>
           <h2 class="text-lg font-bold text-white">Dashboard Pengelolaan Stok</h2>
           <p class="text-xs text-slate-400">Monitoring & Input Manajemen Dapur</p>
@@ -89,29 +114,29 @@
       </header>
 
       <!-- TAB 1: MASTER BARANG -->
-      <main id="tabStok" class="p-8 space-y-6">
-        <div class="flex items-center justify-between gap-4">
-          <div class="relative flex-1 max-w-xs">
+      <main id="tabStok" class="p-4 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <div class="relative flex-1 max-w-full sm:max-w-xs">
             <i data-lucide="search" class="absolute left-3 top-2.5 h-4 w-4 text-slate-500"></i>
             <input type="text" id="searchBarang" oninput="renderMasterTable()" placeholder="Cari nama barang..." class="w-full rounded-xl border border-slate-800 bg-slate-900 pl-9 pr-4 py-2 text-xs text-white focus:border-amber-500 focus:outline-none">
           </div>
-          <button onclick="loadAllData()" class="flex items-center gap-2 rounded-xl bg-slate-800 border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition">
-            <i data-lucide="refresh-cw" class="h-4 w-4"></i> Refresh
+          <button onclick="loadAllData()" class="flex items-center justify-center gap-2 rounded-xl bg-slate-800 border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition">
+            <i data-lucide="refresh-cw" class="h-4 w-4"></i> Refresh Data
           </button>
         </div>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
-          <table class="w-full text-left text-xs text-slate-300">
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300 min-w-[640px]">
             <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase text-[11px]">
               <tr>
-                <th class="px-6 py-4">ID</th>
-                <th class="px-6 py-4">Nama Barang</th>
-                <th class="px-6 py-4 text-center">Jumlah Stok</th>
-                <th class="px-6 py-4">Satuan</th>
-                <th class="px-6 py-4">Tempat Simpan</th>
-                <th class="px-6 py-4 text-center">Angka Batas</th>
-                <th class="px-6 py-4 text-center">Status</th>
-                <th class="px-6 py-4 text-center">Aksi</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4">ID</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4">Nama Barang</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4 text-center">Jumlah Stok</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4">Satuan</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4">Tempat Simpan</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4 text-center">Angka Batas</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4 text-center">Status</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody id="tableMasterBody" class="divide-y divide-slate-800/60"></tbody>
@@ -120,86 +145,87 @@
       </main>
 
       <!-- TAB 2: INPUT DATA STOK -->
-<main id="tabInputStok" class="hidden p-8 max-w-2xl">
-  <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 space-y-5 backdrop-blur-xl">
-    <h3 class="text-base font-bold text-white border-b border-slate-800 pb-3" id="formStokTitle">Tambah / Restok Barang</h3>
-    <form onsubmit="handleSaveBarang(event)" class="space-y-4">
-      <input type="hidden" id="editBarangId">
-      
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Opsi Barang</label>
-        <select id="selectJenisInput" onchange="toggleOpsiBarang()" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
-          <option value="BARU">-- Tambah Barang Baru --</option>
-          <option value="LAMA">-- Restok Barang Ada (Akumulasi Otomatis) --</option>
-        </select>
-      </div>
+      <main id="tabInputStok" class="hidden p-4 sm:p-8 max-w-2xl mx-auto w-full">
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 sm:p-6 space-y-5 backdrop-blur-xl">
+          <h3 class="text-base font-bold text-white border-b border-slate-800 pb-3" id="formStokTitle">Tambah / Restok Barang</h3>
+          <form onsubmit="handleSaveBarang(event)" class="space-y-4">
+            <input type="hidden" id="editBarangId">
+            
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Opsi Barang</label>
+              <select id="selectJenisInput" onchange="toggleOpsiBarang()" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+                <option value="BARU">-- Tambah Barang Baru --</option>
+                <option value="LAMA">-- Restok Barang Ada (Akumulasi Otomatis) --</option>
+              </select>
+            </div>
 
-      <div id="containerBarangLama" class="hidden">
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Pilih Barang</label>
-        <select id="selectBarangLama" onchange="autofillBarangLama()" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500"></select>
-      </div>
+            <div id="containerBarangLama" class="hidden">
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Pilih Barang</label>
+              <select id="selectBarangLama" onchange="autofillBarangLama()" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500"></select>
+            </div>
 
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Barang</label>
-        <input type="text" id="formNamaBarang" required placeholder="Contoh: Beras Premium" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
-      </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Barang</label>
+              <input type="text" id="formNamaBarang" required placeholder="Contoh: Beras Premium" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+            </div>
 
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah</label>
-          <input type="number" step="any" id="formJumlah" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah</label>
+                <input type="number" step="any" id="formJumlah" required placeholder="0" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Satuan</label>
+                <input type="text" id="formSatuan" required placeholder="Kg / Pcs / Liter" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Tempat Simpan</label>
+                <input type="text" id="formTempatSimpan" required placeholder="Gudang A / Rak 2" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Angka Batas (Notifikasi Minimal)</label>
+                <input type="number" step="any" id="formAngkaBatas" required placeholder="5" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
+              </div>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+              <button type="submit" id="btnSaveBarang" class="flex-1 rounded-xl bg-amber-500 py-3 text-xs font-bold text-slate-950 hover:bg-amber-400 transition">SIMPAN DATA STOK</button>
+              <button type="button" onclick="resetFormStok()" class="px-4 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">Reset</button>
+            </div>
+          </form>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Satuan</label>
-          <input type="text" id="formSatuan" required placeholder="Kg / Pcs / Liter" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
-        </div>
-      </div>
+      </main>
 
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Tempat Simpan</label>
-          <input type="text" id="formTempatSimpan" required placeholder="Gudang A / Rak 2" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Angka Batas (Notifikasi Minimal)</label>
-          <input type="number" step="any" id="formAngkaBatas" required placeholder="5" class="w-full rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-xs text-white focus:border-amber-500">
-        </div>
-      </div>
-
-      <div class="flex gap-2 pt-2">
-        <button type="submit" id="btnSaveBarang" class="flex-1 rounded-xl bg-amber-500 py-3 text-xs font-bold text-slate-950 hover:bg-amber-400 transition">SIMPAN DATA STOK</button>
-        <button type="button" onclick="resetFormStok()" class="px-4 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">Reset</button>
-      </div>
-    </form>
-  </div>
-</main>
       <!-- TAB 3: DATA PEMAKAIAN -->
-      <main id="tabLaporan" class="hidden p-8 space-y-6">
-        <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
-          <div class="flex items-center gap-3 text-xs">
-            <span class="font-semibold text-slate-300">Filter Tanggal:</span>
-            <input type="date" id="filterStart" class="rounded-xl border border-slate-800 bg-slate-950 p-2 text-white">
+      <main id="tabLaporan" class="hidden p-4 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <span class="font-semibold text-slate-300 w-full sm:w-auto">Filter:</span>
+            <input type="date" id="filterStart" class="rounded-xl border border-slate-800 bg-slate-950 p-2 text-white text-xs flex-1 sm:flex-none">
             <span class="text-slate-500">s/d</span>
-            <input type="date" id="filterEnd" class="rounded-xl border border-slate-800 bg-slate-950 p-2 text-white">
-            <button onclick="renderPemakaianTable()" class="rounded-xl bg-slate-800 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-700">Terapkan</button>
+            <input type="date" id="filterEnd" class="rounded-xl border border-slate-800 bg-slate-950 p-2 text-white text-xs flex-1 sm:flex-none">
+            <button onclick="renderPemakaianTable()" class="rounded-xl bg-slate-800 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-700">Filter</button>
           </div>
 
-          <button onclick="exportToExcelFormatted(event)" class="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition">
+          <button onclick="exportToExcelFormatted(event)" class="flex items-center justify-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-4 py-2.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition">
             <i data-lucide="file-spreadsheet" class="h-4 w-4"></i> Export Excel (.XLSX)
           </button>
         </div>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
-          <table class="w-full text-left text-xs text-slate-300">
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300 min-w-[640px]">
             <thead class="border-b border-slate-800 bg-slate-950/50 text-slate-400 font-semibold uppercase text-[11px]">
               <tr>
-                <th class="px-6 py-4">ID Transaksi</th>
-                <th class="px-6 py-4">Tanggal & Waktu</th>
-                <th class="px-6 py-4">Nama Barang</th>
-                <th class="px-6 py-4 text-center">Jumlah Dipakai</th>
-                <th class="px-6 py-4 text-center">Dipakai Untuk</th>
-                <th class="px-6 py-4 text-center">Petugas</th>
-                <th class="px-6 py-4 text-center">Aksi</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4">ID Transaksi</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4">Tanggal & Waktu</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4">Nama Barang</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4 text-center">Jumlah Dipakai</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4 text-center">Dipakai Untuk</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4 text-center">Petugas</th>
+                <th class="px-4 py-3 sm:px-6 sm:py-4 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody id="tablePemakaianBody" class="divide-y divide-slate-800/60"></tbody>
@@ -212,7 +238,7 @@
 
   <!-- MODAL EDIT PEMAKAIAN -->
   <div id="modalEditPemakaian" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm">
-    <div class="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 space-y-4 shadow-2xl">
+    <div class="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-5 sm:p-6 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="font-bold text-sm text-white">Edit Transaksi Pemakaian</h3>
         <button onclick="closeModalEditPemakaian()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="h-5 w-5"></i></button>
@@ -258,15 +284,17 @@
   <!-- TAMPILAN PETUGAS -->
   <div id="petugasLayout" class="hidden min-h-full p-4 max-w-md mx-auto space-y-5">
     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-      <div class="flex items-center gap-2">
-      <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl bg-slate-900 border border-slate-800">
-        <img src="logo.png" alt="DAFI Catering" class="h-full w-full object-contain">
-      </div>
+      <div class="flex items-center gap-2.5">
+        <div class="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-slate-900 border border-slate-800 p-1">
+          <img src="logo.png" alt="DAFI Catering" class="h-full w-full object-contain" onerror="this.remove(); document.getElementById('fallbackIconPetugas').classList.remove('hidden');">
+          <i id="fallbackIconPetugas" data-lucide="chef-hat" class="hidden h-4 w-4 text-amber-500"></i>
+        </div>
+        <div>
           <h1 class="font-bold text-sm text-white">Input Pemakaian Barang</h1>
           <p class="text-[10px] text-slate-400" id="petugasNameDisplay">Petugas</p>
         </div>
       </div>
-      <button onclick="logout()" class="text-xs bg-slate-800 px-3 py-1.5 rounded-xl text-slate-300">Keluar</button>
+      <button onclick="logout()" class="text-xs bg-slate-800 px-3 py-1.5 rounded-xl text-slate-300 hover:text-white">Keluar</button>
     </div>
 
     <form onsubmit="handlePetugasPemakaian(event)" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-4 shadow-xl backdrop-blur-xl">
@@ -313,11 +341,19 @@
 
     function updateClock() {
       const now = new Date();
-      document.getElementById('clock24').textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
-      document.getElementById('dateToday').textContent = now.toLocaleDateString('id-ID', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+      const clockEl = document.getElementById('clock24');
+      const dateEl = document.getElementById('dateToday');
+      if (clockEl) clockEl.textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
+      if (dateEl) dateEl.textContent = now.toLocaleDateString('id-ID', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    function toggleSidebarMobile() {
+      const sidebar = document.getElementById('sidebarAdmin');
+      sidebar.classList.toggle('hidden');
+      sidebar.classList.toggle('flex');
+    }
 
     async function callBackend(action, payload = {}) {
       payload.action = action;
@@ -340,6 +376,9 @@
         if (res.success) {
           currentUser = res;
           document.getElementById('loginScreen').classList.add('hidden');
+
+          document.getElementById('adminLayout').classList.add('hidden');
+          document.getElementById('petugasLayout').classList.add('hidden');
 
           if (res.role.toLowerCase() === 'admin') {
             document.getElementById('adminNameDisplay').textContent = res.username;
@@ -367,6 +406,11 @@
     function switchAdminTab(tab) {
       ['tabStok', 'tabInputStok', 'tabLaporan'].forEach(id => document.getElementById(id).classList.add('hidden'));
       ['menuStok', 'menuInputStok', 'menuLaporan'].forEach(id => document.getElementById(id).className = "w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition");
+
+      if (window.innerWidth < 768) {
+        document.getElementById('sidebarAdmin').classList.add('hidden');
+        document.getElementById('sidebarAdmin').classList.remove('flex');
+      }
 
       if (tab === 'stok') {
         document.getElementById('tabStok').classList.remove('hidden');
@@ -414,14 +458,14 @@
 
         tbody.innerHTML += `
           <tr class="transition hover:bg-slate-800/30">
-            <td class="px-6 py-4 font-mono text-slate-400">${item.id}</td>
-            <td class="px-6 py-4 font-semibold text-white">${item.namaBarang}</td>
-            <td class="px-6 py-4 text-center font-bold ${item.isMenipis ? 'text-rose-400' : 'text-amber-400'}">${item.jumlah}</td>
-            <td class="px-6 py-4 text-slate-400">${item.satuan}</td>
-            <td class="px-6 py-4 text-slate-400">${item.tempatSimpan}</td>
-            <td class="px-6 py-4 text-center text-slate-400">${item.angkaBatas}</td>
-            <td class="px-6 py-4 text-center">${statusBadge}</td>
-            <td class="px-6 py-4 text-center">
+            <td class="px-4 py-3 sm:px-6 sm:py-4 font-mono text-slate-400">${item.id}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 font-semibold text-white">${item.namaBarang}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-center font-bold ${item.isMenipis ? 'text-rose-400' : 'text-amber-400'}">${item.jumlah}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-slate-400">${item.satuan}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-slate-400">${item.tempatSimpan}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-center text-slate-400">${item.angkaBatas}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-center">${statusBadge}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-center">
               <div class="flex justify-center gap-2">
                 <button onclick="editBarang('${item.id}')" class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg hover:bg-amber-500/20"><i data-lucide="edit" class="h-3.5 w-3.5"></i></button>
                 <button onclick="deleteBarang('${item.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i></button>
@@ -456,13 +500,13 @@
       filtered.forEach(item => {
         tbody.innerHTML += `
           <tr class="transition hover:bg-slate-800/30">
-            <td class="px-6 py-4 font-mono text-slate-400">${item.id}</td>
-            <td class="px-6 py-4 text-slate-400">${item.tanggal}</td>
-            <td class="px-6 py-4 font-semibold text-white">${item.namaBarang}</td>
-            <td class="px-6 py-4 text-center font-bold text-white">${item.jumlahDipakai}</td>
-            <td class="px-6 py-4 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.dipakaiUntuk === 'Santri' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'}">${item.dipakaiUntuk}</span></td>
-            <td class="px-6 py-4 text-center text-slate-400">${item.kategoriPetugas}</td>
-            <td class="px-6 py-4 text-center">
+            <td class="px-4 py-3 sm:px-6 sm:py-4 font-mono text-slate-400">${item.id}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-slate-400">${item.tanggal}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 font-semibold text-white">${item.namaBarang}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-center font-bold text-white">${item.jumlahDipakai}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.dipakaiUntuk === 'Santri' ? 'bg-blue-500/10 text-blue-400' : 'bg-amber-500/10 text-amber-400'}">${item.dipakaiUntuk}</span></td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-center text-slate-400">${item.kategoriPetugas}</td>
+            <td class="px-4 py-3 sm:px-6 sm:py-4 text-center">
               <div class="flex justify-center gap-2">
                 <button onclick="openEditPemakaian('${item.id}')" class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg hover:bg-amber-500/20"><i data-lucide="edit" class="h-3.5 w-3.5"></i></button>
                 <button onclick="deletePemakaian('${item.id}')" class="p-1.5 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i></button>

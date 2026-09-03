@@ -48,7 +48,7 @@
   <div id="adminLayout" class="hidden min-h-full flex flex-col md:flex-row">
     
     <!-- HEADER MOBILE (Tampil di Layar Kecil) -->
-    <header class="md:hidden flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 py-3 backdrop-blur-xl sticky top-0 z-40">
+    <header class="md:hidden flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 py-3 backdrop-blur-xl sticky top-0 z-50">
       <div class="flex items-center gap-3">
         <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl bg-slate-900 border border-slate-800 p-0.5">
           <img src="logo.png" alt="DAFI Catering" class="h-full w-full object-contain" onerror="this.remove(); document.getElementById('fallbackIconMob').classList.remove('hidden');">
@@ -56,13 +56,13 @@
         </div>
         <span class="font-bold text-sm text-white">DAFI Catering</span>
       </div>
-      <button onclick="toggleSidebarMobile()" class="p-2 text-slate-300 hover:text-white">
+      <button onclick="toggleSidebarMobile()" class="p-2 text-slate-300 hover:text-white focus:outline-none">
         <i data-lucide="menu" class="h-6 w-6"></i>
       </button>
     </header>
 
-    <!-- SIDEBAR (Desktop & Mobile Dropdown) -->
-    <aside id="sidebarAdmin" class="hidden md:flex w-full md:w-64 border-r border-slate-800/80 bg-slate-900/60 backdrop-blur-xl flex-col justify-between p-4 fixed md:sticky top-0 z-30 h-auto md:h-screen">
+    <!-- SIDEBAR (Desktop Sticky & Mobile Popup Overlay) -->
+    <aside id="sidebarAdmin" class="hidden md:flex w-full md:w-64 border-r border-slate-800/80 bg-slate-900/95 backdrop-blur-xl flex-col justify-between p-4 fixed md:sticky top-[57px] md:top-0 left-0 right-0 z-40 h-[calc(100vh-57px)] md:h-screen">
       <div class="space-y-6">
         <div class="hidden md:flex items-center gap-3 px-2">
           <div class="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-slate-900 border border-slate-800 p-1">
@@ -75,20 +75,20 @@
           </div>
         </div>
 
-        <nav class="space-y-1.5 text-xs font-medium">
-          <button onclick="switchAdminTab('stok')" id="menuStok" class="w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold">
-            <i data-lucide="package" class="h-4 w-4"></i> Master Stok Barang
+        <nav class="space-y-2 text-xs font-medium">
+          <button onclick="switchAdminTab('stok')" id="menuStok" class="w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-3 text-amber-400 border border-amber-500/20 font-semibold text-left">
+            <i data-lucide="package" class="h-4 w-4 flex-shrink-0"></i> <span>Master Stok Barang</span>
           </button>
-          <button onclick="switchAdminTab('inputStok')" id="menuInputStok" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-            <i data-lucide="plus-circle" class="h-4 w-4"></i> Input Data Stok
+          <button onclick="switchAdminTab('inputStok')" id="menuInputStok" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white transition text-left">
+            <i data-lucide="plus-circle" class="h-4 w-4 flex-shrink-0"></i> <span>Input Data Stok</span>
           </button>
-          <button onclick="switchAdminTab('laporan')" id="menuLaporan" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-            <i data-lucide="file-text" class="h-4 w-4"></i> Data Pemakaian
+          <button onclick="switchAdminTab('laporan')" id="menuLaporan" class="w-full flex items-center gap-3 rounded-xl px-3.5 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white transition text-left">
+            <i data-lucide="file-text" class="h-4 w-4 flex-shrink-0"></i> <span>Data Pemakaian</span>
           </button>
         </nav>
       </div>
 
-      <div class="border-t border-slate-800 pt-4 px-2 flex items-center justify-between mt-4 md:mt-0">
+      <div class="border-t border-slate-800 pt-4 px-2 flex items-center justify-between mt-auto">
         <div class="text-xs">
           <p class="font-bold text-white" id="adminNameDisplay">Admin</p>
           <p class="text-[10px] text-emerald-400 font-semibold">Online</p>
@@ -351,8 +351,13 @@
 
     function toggleSidebarMobile() {
       const sidebar = document.getElementById('sidebarAdmin');
-      sidebar.classList.toggle('hidden');
-      sidebar.classList.toggle('flex');
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('flex');
+      } else {
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('flex');
+      }
     }
 
     async function callBackend(action, payload = {}) {
@@ -405,7 +410,7 @@
 
     function switchAdminTab(tab) {
       ['tabStok', 'tabInputStok', 'tabLaporan'].forEach(id => document.getElementById(id).classList.add('hidden'));
-      ['menuStok', 'menuInputStok', 'menuLaporan'].forEach(id => document.getElementById(id).className = "w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-slate-400 hover:bg-slate-800/60 hover:text-white transition");
+      ['menuStok', 'menuInputStok', 'menuLaporan'].forEach(id => document.getElementById(id).className = "w-full flex items-center gap-3 rounded-xl px-3.5 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white transition text-left");
 
       if (window.innerWidth < 768) {
         document.getElementById('sidebarAdmin').classList.add('hidden');
@@ -414,13 +419,13 @@
 
       if (tab === 'stok') {
         document.getElementById('tabStok').classList.remove('hidden');
-        document.getElementById('menuStok').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+        document.getElementById('menuStok').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-3 text-amber-400 border border-amber-500/20 font-semibold text-left";
       } else if (tab === 'inputStok') {
         document.getElementById('tabInputStok').classList.remove('hidden');
-        document.getElementById('menuInputStok').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+        document.getElementById('menuInputStok').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-3 text-amber-400 border border-amber-500/20 font-semibold text-left";
       } else {
         document.getElementById('tabLaporan').classList.remove('hidden');
-        document.getElementById('menuLaporan').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-2.5 text-amber-400 border border-amber-500/20 font-semibold";
+        document.getElementById('menuLaporan').className = "w-full flex items-center gap-3 rounded-xl bg-amber-500/10 px-3.5 py-3 text-amber-400 border border-amber-500/20 font-semibold text-left";
       }
     }
 
